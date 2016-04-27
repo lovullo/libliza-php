@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="libliza-php" default="build">
+  <!-- Use Symfony's default phpunit.xml location -->
+  <property name="phpunitconfig" value="${basedir}/test/"/>
+
+  <import file="${basedir}/vendor/lovullo/phpqaconfig/build.xml"/>
+
+
+  <target name="build"
+          description="Compile all dependent code">
+    <!-- nothing yet -->
+  </target>
+
+
+  <target name="setup"
+          description="Perform initial repository setup tasks">
+    <exec dir="${basedir}"
+          executable="composer"
+          failonerror="true">
+      <arg value="install" />
+    </exec>
+
+    <antcall target="build" />
+  </target>
+
+
+  <!-- standard target in Makefiles -->
+  <target name="check"
+          description="Run tests"
+          depends="phpunit" />
+
+
+  <!-- alias for check -->
+  <target name="test"
+          description="Run tests"
+          depends="check" />
+</project>
+

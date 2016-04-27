@@ -1,0 +1,17 @@
+{
+    "name": "lovullo/libliza-php",
+    "description": "PHP client for the Liza Data Collection Framework",
+    "version": "0.0.0",
+    "type": "project",
+    "keywords": [ "liza" ],
+    "license": "GPL-3.0+",
+    "autoload": {
+        "psr-4": {
+            "Lovullo\\Liza\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "lovullo/phpqaconfig": "@stable"
+    }
+}
