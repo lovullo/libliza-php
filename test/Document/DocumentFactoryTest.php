@@ -52,17 +52,30 @@ class DocumentFactoryTest
         $sut    = $this->createSut();
         $obj    = new \StdClass();
         $bucket = $this->createDummyBucket();
-        $data   = array( 'foo' );
+        $doc_id = 'ABC123';
+        $data   = array( 'id' => $doc_id );
 
         $sut
             ->expects( $this->once() )
             ->method( 'createDocument' )
-            ->with( $data, $bucket )
+            ->with( $doc_id, $bucket )
             ->willReturn( $obj );
 
         $this->assertSame(
             $obj,
             $sut->fromData( $data, $bucket )
         );
+    }
+
+
+    /**
+     * @expectedException Lovullo\Liza\Document\BadDocumentDataException
+     */
+    public function testFailsIfNoDocumentIdAvailableInData()
+    {
+        $sut    = $this->createSut();
+        $bucket = $this->createDummyBucket();
+
+        $sut->fromData( array(), $bucket );
     }
 }
