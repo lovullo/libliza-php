@@ -43,7 +43,16 @@ class DocumentFactory
      */
     final public function fromData( array $doc_data, Bucket $bucket )
     {
-        return $this->createDocument( $doc_data, $bucket );
+        if ( empty( $doc_data[ 'id' ] ) )
+        {
+            throw new BadDocumentDataException(
+                'Invalid or incomplete document data'
+            );
+        }
+
+        $doc_id = $doc_data[ 'id' ];
+
+        return $this->createDocument( $doc_id, $bucket );
     }
 
 
@@ -57,8 +66,8 @@ class DocumentFactory
      *
      * @return Document
      */
-    protected function createDocument( array $doc_data, Bucket $bucket )
+    protected function createDocument( $doc_id, Bucket $bucket )
     {
-        return new Document( $doc_data, $bucket );
+        return new Document( $doc_id, $bucket );
     }
 }
