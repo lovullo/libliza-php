@@ -27,12 +27,18 @@
   <!-- standard target in Makefiles -->
   <target name="check"
           description="Run tests"
-          depends="phpunit" />
+          depends="phpunit, diagram-chk" />
 
 
   <!-- alias for check -->
   <target name="test"
           description="Run tests"
           depends="check" />
+
+
+  <target name="diagram-chk"
+          description="QA check on diagrams">
+    <exec executable="build-aux/diagram-chk" />
+  </target>
 </project>
 
