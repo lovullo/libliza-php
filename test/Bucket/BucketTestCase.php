@@ -150,6 +150,16 @@ abstract class BucketTestCase
     }
 
 
+    /**
+     * @expectedException \DomainException
+     */
+    public function testThrowsErrorIfValueIsNotAnArray()
+    {
+        $this->getSut( array( 'foo' => 'nonarray' ) )
+            ->getDataByName( 'foo' );
+    }
+
+
     public function valueLengthProviderProvider()
     {
         // data, requested index, success
