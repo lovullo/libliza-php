@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2c7c56ab0fd5048543d2949cad433062",
+    "hash": "3f2e0237eae6e3f925dc1cf3c5b9de09",
     "content-hash": "1fadac9ec2f8bb610369b26343dbcf7a",
     "packages": [
         {
@@ -116,16 +116,16 @@
         },
         {
             "name": "lovullo/phpqaconfig",
-            "version": "1.0.19",
+            "version": "1.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lovullo/phpqaconfig.git",
-                "reference": "5084f1abff3c4712628925d5a50b49278db366a2"
+                "reference": "bc3942b3f22654f14d2b9e3b7a3ae8344190d79d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lovullo/phpqaconfig/zipball/5084f1abff3c4712628925d5a50b49278db366a2",
-                "reference": "5084f1abff3c4712628925d5a50b49278db366a2",
+                "url": "https://api.github.com/repos/lovullo/phpqaconfig/zipball/bc3942b3f22654f14d2b9e3b7a3ae8344190d79d",
+                "reference": "bc3942b3f22654f14d2b9e3b7a3ae8344190d79d",
                 "shasum": ""
             },
             "require": {
@@ -143,7 +143,7 @@
                 "qa",
                 "tools"
             ],
-            "time": "2015-10-02 16:37:56"
+            "time": "2016-04-29 14:42:12"
         },
         {
             "name": "lovullo/phpqatools",

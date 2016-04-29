@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <project name="libliza-php" default="build">
-  <!-- Use Symfony's default phpunit.xml location -->
   <property name="phpunitconfig" value="${basedir}/test/"/>
+  <property name="phpcsignore" value="vendor/,test/" />
+  <property name="phpmdignore" value="vendor/,test/" />
 
   <import file="${basedir}/vendor/lovullo/phpqaconfig/build.xml"/>
 
