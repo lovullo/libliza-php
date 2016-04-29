@@ -140,6 +140,23 @@ protected function createSut()
     }
 
 
+    /**
+     * @expectedException Lovullo\Liza\Client\BadClientDataException
+     */
+    public function testFailsWhenNeitherQuoteNorDocumentIdAvailable()
+    {
+        $sut = $this->createPlainSut( 'base' );
+
+        $dummy_data = $this->getDummyData();
+        unset( $dummy_data[ 'id' ], $dummy_data[ 'quoteId' ] );
+
+        $sut->method( 'queryDocument' )
+            ->willReturn( $dummy_data );
+
+        $given = $sut->getDocumentData( 0 );
+    }
+
+
     public function testReturnsAllDocumentData()
     {
         $sut        = $this->createPlainSut( 'base' );

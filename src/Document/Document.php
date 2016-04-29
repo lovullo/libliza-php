@@ -52,12 +52,12 @@ class Document
      *
      * $id will be cast to a string.
      *
-     * @param string $id     document identifier
+     * @param string $doc_id document identifier
      * @param Bucket $bucket document key/value store
      */
-    public function __construct( $id, Bucket $bucket )
+    public function __construct( $doc_id, Bucket $bucket )
     {
-        $this->_id     = (string)$id;
+        $this->_id     = (string)$doc_id;
         $this->_bucket = $bucket;
     }
 

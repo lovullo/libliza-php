@@ -44,18 +44,6 @@ class ImmutableBucket
      */
     private $_data = array();
 
-    /**
-     * Quote id associated with the bucket data
-     * @var int
-     */
-    private $_quote_id = 0;
-
-    /**
-     * Agent id associated with the bucket data
-     * @var int
-     */
-    private $_agent_id = 0;
-
 
     /**
      * Initialize bucket with data

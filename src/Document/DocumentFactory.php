@@ -40,6 +40,8 @@ class DocumentFactory
      * @param Bucket $bucket   document key/value store
      *
      * @return Document
+     *
+     * @throws BadDocumentDataException if `id` key is missing or empty
      */
     final public function fromData( array $doc_data, Bucket $bucket )
     {
@@ -65,6 +67,8 @@ class DocumentFactory
      * @param Bucket $bucket   document key/value store
      *
      * @return Document
+     *
+     * @codeCoverageIgnore constructor
      */
     protected function createDocument( $doc_id, Bucket $bucket )
     {

@@ -7,8 +7,8 @@
     "license": "GPL-3.0+",
     "autoload": {
         "psr-4": {
-            "Lovullo\\Liza\\": "src/"
-            "Lovullo\\Liza\\Test\\": "test/"
+            "Lovullo\\Liza\\": "src/",
+            "Lovullo\\Liza\\Tests\\": "test/"
         }
     },
     "require": {
