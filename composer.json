@@ -11,6 +11,11 @@
             "Lovullo\\Liza\\Tests\\": "test/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "5.3.10"
+        }
+    },
     "require": {
         "php": ">=5.3.3",
         "lovullo/phpqaconfig": "@stable"
