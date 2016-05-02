@@ -41,5 +41,12 @@
           description="QA check on diagrams">
     <exec executable="build-aux/diagram-chk" />
   </target>
+
+  <target name="diagram-uml"
+          description="Build UML diagram">
+    <exec executable="dia" failonerror="true">
+        <arg line="-s 1500 -e build/class-uml.png doc/diagrams/class-uml.dia" />
+    </exec>
+  </target>
 </project>
 
