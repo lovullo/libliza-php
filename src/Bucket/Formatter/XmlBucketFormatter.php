@@ -166,7 +166,7 @@ class XmlBucketFormatter
         elseif ( $value instanceof \Closure )
         {
             // until PHP 5.4 (which supports $this in closures)
-            $build = array( $this, 'buildXml' );
+            $build = array( $this, 'buildXmlTmp' );
 
             $result_value = $value(
                 function( array $sub_dfn ) use ( $build, $name )
@@ -293,5 +293,25 @@ class XmlBucketFormatter
         $index = ( isset( $data[ 2 ] ) ) ? (int)( $data[ 2 ] ) : 0;
 
         return $this->_bucket->getDataByName( $bname, $index );
+    }
+
+
+    /**
+     * Forward to protected buildXml
+     *
+     * Because PHP 5.3?  It seems to have a problem with protected methods
+     * as callbacks, but not private.
+     *
+     * TODO: Remove in 5.5.
+     *
+     * @param array|string     $value node value (array indicates subnode)
+     * @param string           $name  node name
+     * @param SimpleXmlElement $xml xml object to manipulate
+     *
+     * @return SimpleXmlElement root node
+     */
+    public function buildXmlTmp( $value, $name, $xml )
+    {
+        return $this->buildXml( $value, $name, $xml );
     }
 }
