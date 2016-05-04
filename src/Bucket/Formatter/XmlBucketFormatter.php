@@ -134,7 +134,7 @@ class XmlBucketFormatter
         $this->_bucket = $bucket;
 
         // recursively generate the XML, beginning with the root node
-        $xml = $this->_buildXml(
+        $xml = $this->buildXml(
             $this->_dfn,
             $this->_root_name,
             null
@@ -156,17 +156,17 @@ class XmlBucketFormatter
      *
      * @return SimpleXmlElement root node
      */
-    private function _buildXml( $value, $name, $xml )
+    protected function buildXml( $value, $name, $xml )
     {
         // arrays represent sub-nodes
         if ( is_array( $value ) )
         {
-            return $this->_buildNode( $value, $name, $xml );
+            return $this->buildNode( $value, $name, $xml );
         }
         elseif ( $value instanceof \Closure )
         {
             // until PHP 5.4 (which supports $this in closures)
-            $build = array( $this, '_buildXml' );
+            $build = array( $this, 'buildXml' );
 
             $result_value = $value(
                 function( array $sub_dfn ) use ( $build, $name )
@@ -179,7 +179,7 @@ class XmlBucketFormatter
         else
         {
             // any other value should be assigned to the current node
-            $result_value = $this->_parseValue( $value );
+            $result_value = $this->parseValue( $value );
         }
 
         // @ indicates an attribute
@@ -206,7 +206,7 @@ class XmlBucketFormatter
      *
      * @return void
      */
-    private function _buildDuplicateNodes( $value, $name, $xml )
+    protected function buildDuplicateNodes( $value, $name, $xml )
     {
         // strip off * suffix
         $name  = substr( $name, 0, -1 );
@@ -215,7 +215,7 @@ class XmlBucketFormatter
         {
             $node = $xml->addChild( $name );
             array_walk(
-                $value[ $i ], array( $this, '_buildXml' ), $node
+                $value[ $i ], array( $this, 'buildXml' ), $node
             );
         }
 
@@ -232,12 +232,12 @@ class XmlBucketFormatter
      *
      * @return void
      */
-    private function _buildNode( $value, $name, $xml )
+    protected function buildNode( $value, $name, $xml )
     {
         // * suffix implies multiple nodes of the same name
         if ( substr( $name, -1 ) === '*' )
         {
-            return $this->_buildDuplicateNodes( $value, $name, $xml );
+            return $this->buildDuplicateNodes( $value, $name, $xml );
         }
 
         // if no node exists, create the root node
@@ -251,7 +251,7 @@ class XmlBucketFormatter
         }
 
         // recurse
-        array_walk( $value, array( $this, '_buildXml' ), $node );
+        array_walk( $value, array( $this, 'buildXml' ), $node );
 
         return $xml;
     }
@@ -266,12 +266,12 @@ class XmlBucketFormatter
      *
      * @return mixed bucket lookup or original value
      */
-    private function _parseValue( $value )
+    protected function parseValue( $value )
     {
         // colon indicates bucket lookup
         if ( $value && $value[ 0 ] === ':' )
         {
-            $value = $this->_bucketLookup( $value );
+            $value = $this->bucketLookup( $value );
         }
 
         return $value;
@@ -285,7 +285,7 @@ class XmlBucketFormatter
      *
      * @return string bucket value
      */
-    private function _bucketLookup( $value )
+    protected function bucketLookup( $value )
     {
         preg_match( '/^:(.*?)(?:\[([0-9]+)\])?$/', $value, $data );
 
