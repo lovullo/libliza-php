@@ -28,20 +28,25 @@ use Lovullo\Liza\Bucket\Bucket;
 /**
  * Builds XML from a Bucket using a convenient syntax
  *
- * This class builds XML using data provided from a bucket. The XML structure is
- * defined using a convenient array syntax:
+ * This class builds XML using data provided from a bucket. The XML
+ * structure is defined using a convenient array syntax:
  *   - Keys are interpreted as node names
- *     - Unless prefixed by '@', where it is then interpreted as an attribute of
- *       the parent node
+ *     - Unless prefixed by '@', where it is then interpreted as an
+ *       attribute of the parent node
  *   - A string value is assigned directly to the node as character data
  *     - Unless prefixed with ':', which will result in a bucket lookup using
  *       the remainder of the string as the bucket id
  *       - An index may optionally be provided in braces (e.g. [1]) at the end
  *         of the string (default: 0)
  *   - An array value is interpreted to be a set of sub-nodes
- *     - Unless the respective key has a '*' suffix, in wich case the array is
- *       expected to be a 0-indexed list of values which will duplicate the node
- *       name before the '*' within the key.
+ *     - Unless the respective key has a '*' suffix, in wich case the array
+ *       is expected to be a 0-indexed list of values which will duplicate
+ *       the node name before the '*' within the key.
+ *   - A closure will be evaluated and its result used as character data
+ *     (like a normal non-bucket-value string).
+ *     - The closure will be passed a continuation to generate additional
+ *       data based on a definition.
+ *     - TODO: support for merging trees
  *
  * For example:
  *   array( 'foo' => array(
@@ -52,14 +57,20 @@ use Lovullo\Liza\Bucket\Bucket;
  *               array( '@type' => ':animal[0]', 'speak' => ':speak[0]' ),
  *               array( '@type' => ':animal[1]', 'speak' => ':speak[1]' ),
  *           ),
- *       )
+ *       ),
+ *       'apply' => function( $generate, $bucket )
+ *       {
+ *           // use $generate( $dfn ) for nodes
+ *           return 'some result ' . $bucket->getDataByName( 'apply', 0 );
+ *       }
  *   ) )
  *
  * Given the following bucket values:
  *   array(
  *     'id'    => array( 'bar' ),
  *     'type'  => array( 'cow', 'cat' ),
- *     'speak' => array( 'Moo', 'Meow' )
+ *     'speak' => array( 'Moo', 'Meow' ),
+ *     'apply' => array( 'applied' ),
  *   );
  *
  * Will result in the following XML:
@@ -72,6 +83,7 @@ use Lovullo\Liza\Bucket\Bucket;
  *       <animal type="cat">
  *         <speak>Meow</speak>
  *       </animal>
+ *       <apply>some result applied</apply>
  *     </animals>
  *   </foo>
  */
@@ -151,19 +163,34 @@ class XmlBucketFormatter
         {
             return $this->_buildNode( $value, $name, $xml );
         }
+        elseif ( $value instanceof \Closure )
+        {
+            // until PHP 5.4 (which supports $this in closures)
+            $build = array( $this, '_buildXml' );
 
-        // any other value should be assigned to the current node
-        $value = $this->_parseValue( $value );
+            $result_value = $value(
+                function( array $sub_dfn ) use ( $build, $name )
+                {
+                    return call_user_func( $build, $sub_dfn, $name, null );
+                },
+                $this->_bucket
+            );
+        }
+        else
+        {
+            // any other value should be assigned to the current node
+            $result_value = $this->_parseValue( $value );
+        }
 
         // @ indicates an attribute
         if ( $name[ 0 ] === '@' )
         {
-            $xml[ substr( $name, 1 ) ] = $value;
+            $xml[ substr( $name, 1 ) ] = $result_value;
         }
         else
         {
             // simply add the string value
-            $xml->addChild( $name, htmlentities( $value ) );
+            $xml->addChild( $name, htmlentities( $result_value ) );
         }
 
         return $xml;

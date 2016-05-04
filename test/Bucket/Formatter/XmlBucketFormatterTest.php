@@ -79,12 +79,12 @@ class XmlBucketFormatterTest
     }
 
 
-    private function _getXml( array $dfn = null )
+    protected function getXml( array $dfn = null, $bucket = null )
     {
-        $dfn = ( $dfn ) ?: $this->_default_dfn;
+        $dfn    = ( $dfn ) ?: $this->_default_dfn;
+        $bucket = $bucket ?: $this->getMockBucket( $this->_bucket_data );
 
-        $sut    = new Sut( $dfn, $this->_root_node_name );
-        $bucket = $this->getMockBucket( $this->_bucket_data );
+        $sut = new Sut( $dfn, $this->_root_node_name );
 
         // returns string, so translate back into a SimpleXMLElement that we
         // can query
@@ -94,14 +94,18 @@ class XmlBucketFormatterTest
     }
 
 
-    protected function assertNodes( array $asserts )
+    protected function assertNodes( array $asserts, $xml = null )
     {
-        $xml = $this->_getXml();
+        $use_xml = $xml ?: $this->getXml();
 
         foreach ( $asserts as $xpath => $expected )
         {
             $value = '';
-            $data  = $xml->xpath( "/$this->_root_node_name/$xpath" );
+
+            // honor custom nodes
+            $data  = ( $xml !== null )
+                ? $use_xml->xpath( $xpath )
+                : $use_xml->xpath( "/$this->_root_node_name/$xpath" );
 
             // PHP is obnoxious in that it will not return the value of an
             // attribute directly, even if it's explicitly requested within an
@@ -123,7 +127,7 @@ class XmlBucketFormatterTest
 
     public function testReturnsGivenRootNode()
     {
-        $result = $this->_getXml();
+        $result = $this->getXml();
 
         $this->assertEquals( 1,
             count( $result->xpath( '/' . $this->_root_node_name ) ),
@@ -182,5 +186,62 @@ class XmlBucketFormatterTest
         $this->assertNodes( array(
             '/esc' => $this->_default_dfn['esc'],
         ) );
+    }
+
+
+    public function testAppliesFunctionsAndUsesResult()
+    {
+        $gen_data = array(
+            'cow' => array(
+                'moo' => 'graze',
+            ),
+        );
+
+        $bucket = $this->getMockBucket( array() );
+
+        $given_gen_result = null;
+        $given_bucket     = null;
+        $expected         = 'quux';
+        $expected_attr    = 'quuux_attr';
+
+        $result = $this->getXml( array(
+            'foo' => array(
+                'apply' => function( \Closure $generate, $bucket )
+                    use ( $gen_data, $expected, &$given_gen_result )
+                {
+                    // will be a SimpleXmlElement
+                    $given_gen_result = $generate( $gen_data );
+
+                    return $expected;
+                },
+                '@apply' => function( \Closure $generate, $bucket )
+                    use ( $expected_attr, &$given_bucket )
+                {
+                    $given_bucket = $bucket;
+
+                    return $expected_attr;
+                },
+            ),
+        ), $bucket );
+
+        // overall result
+        $this->assertNodes(
+            array(
+                './foo/apply'  => $expected,
+                './foo/@apply' => $expected_attr,
+            ),
+            $result
+        );
+
+        // generated nodes within callback
+        $this->assertNodes(
+            array(
+                'cow/moo' => 'graze',
+            ),
+            $given_gen_result
+        );
+
+        // we should have been given an actual bucket reference
+        $this->assertSame( $bucket, $given_bucket );
     }
 }
