@@ -1,0 +1,56 @@
+image: lovullo/php-ci
+
+stages:
+    - dependencies
+    - validate
+    - test
+    - analysis
+    - compile
+    - deploy
+
+composer:
+    stage: dependencies
+    script:
+        # Install dependencies via Composer
+        - composer install -o
+    artifacts:
+        paths:
+            - vendor/
+        expire_in: 10 min
+
+check-mergeconflicts:
+    stage: validate
+    script:
+        - ant check_mergeconflicts
+    before_script: []
+
+phplint:
+    stage: validate
+    script:
+        - ant phplint
+    before_script: []
+
+phpunit:
+    stage: test
+    script:
+        - ant phpunit
+    before_script: []
+
+phpcs:
+    stage: analysis
+    script:
+        - ant phpcs
+    before_script: []
+
+phpmd:
+    stage: analysis
+    script:
+        - ant phpmd
+    before_script: []
+
+phpcpd:
+    stage: analysis
+    script:
+        - ant phpcpd
+    before_script: []
+
