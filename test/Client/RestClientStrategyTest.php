@@ -49,9 +49,9 @@ use Lovullo\Liza\Client\RestClientStrategy as Sut;
 class RestClientStrategyTest
     extends ClientStrategyTestCase
 {
-protected function createSut()
+    protected function createSut()
     {
-        $sut = $this->createPlainSut( 'https://base' );
+        $sut = $this->createPlainSut( 'https://base', 'foo' );
 
         // valid data for test case supertype
         $sut->method( 'queryDocument' )
@@ -64,12 +64,12 @@ protected function createSut()
     /**
      * Create SUT without setting up default mocks
      */
-    protected function createPlainSut( $base_url )
+    protected function createPlainSut( $base_url, $skey = 'fookey' )
     {
         return $this->getMockBuilder(
             'Lovullo\Liza\Client\RestClientStrategy'
         )
-            ->setConstructorArgs( array( $base_url ) )
+            ->setConstructorArgs( array( $base_url, $skey ) )
             ->setMethods( array( 'queryDocument' ) )
             ->getMock();
     }
@@ -185,7 +185,8 @@ protected function createSut()
         $id  = 'FOO123';
 
         // no mocking at all now
-        $sut = new Sut( $url );
+        $skey = 'testfookey123';
+        $sut  = new Sut( $url, $skey );
 
         $dummy_data = $this->getDummyData();
         $dummy_data[ 'worked' ] = 'ok';
@@ -197,7 +198,7 @@ protected function createSut()
         $result = $sut->getDocumentData( $id );
 
         $this->assertEquals(
-            $url . $id . '/init',
+            $url . $id . '/init?skey=' . $skey,
             $file_get_contents_url
         );
 
