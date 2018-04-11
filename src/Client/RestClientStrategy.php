@@ -37,19 +37,29 @@ class RestClientStrategy
 {
     /**
      * Base URL of REST endpoint
+     *
      * @var string
      */
     private $_base_url = '';
+
+    /**
+     * Session key required for REST endpoint
+     *
+     * @var string
+     */
+    private $_skey = '';
 
 
     /**
      * Initialize REST client
      *
      * @param string $base_url base URL for REST endpoint
+     * @param string $skey     Session key
      */
-    public function __construct( $base_url )
+    public function __construct( $base_url, $skey )
     {
         $this->_base_url = (string)$base_url;
+        $this->_skey     = (string)$skey;
     }
 
 
@@ -94,8 +104,10 @@ class RestClientStrategy
      */
     protected function queryDocument( $base_url, $doc_id )
     {
+        $url = $base_url . $doc_id . '/init?skey=' . $this->_skey;
+
         return json_decode(
-            file_get_contents( $base_url . $doc_id . '/init' ),
+            file_get_contents( $url ),
             true
         );
     }
