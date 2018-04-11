@@ -103,18 +103,29 @@ class Client
      *
      * @return array bucket data
      *
+     * @throws BadClientDataException if document content is invalid or missing
      * @throws BadClientDataException if data are invalid or missing
      */
     protected function getBucketData( array $doc_data )
     {
-        if ( empty( $doc_data[ 'data' ] )
-            || !is_array( $doc_data[ 'data' ] ) )
+        if ( !isset( $doc_data[ 'content' ] )
+            || !is_array( $doc_data[ 'content' ] ) )
+        {
+            throw new BadClientDataException(
+                "Invalid or missing content data"
+            );
+        }
+
+        $content = $doc_data[ 'content' ];
+
+        if ( empty( $content[ 'data' ] )
+            || !is_array( $content[ 'data' ] ) )
         {
             throw new BadClientDataException(
                 "Invalid or missing bucket data"
             );
         }
 
-        return $doc_data[ 'data' ];
+        return $content[ 'data' ];
     }
 }
