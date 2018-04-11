@@ -87,10 +87,12 @@ class ClientTest
     protected function getDummyData()
     {
         // valid data
-        return array(
+        return [
             'id'   => 0,
-            'data' => array(),
-        );
+            'content' => [
+                'data' => [],
+            ]
+        ];
     }
 
 
@@ -112,10 +114,12 @@ class ClientTest
         $document       = $this->createDummyDocument();
         $bucket         = $this->createDummyBucket();
 
-        $doc_data = array(
-            'id'   => $doc_id,
-            'data' => $bucket_data,
-        );
+        $doc_data = [
+            'id'      => $doc_id,
+            'content' => [
+                'data' => $bucket_data,
+            ],
+        ];
 
         $mock_strategy
             ->expects( $this->once() )
@@ -146,6 +150,7 @@ class ClientTest
 
     /**
      * @expectedException Lovullo\Liza\Client\BadClientDataException
+     * @expectedExceptionMessageRegExp /missing bucket data/
      */
     public function testFailsIfBucketDataNotProvided()
     {
@@ -160,11 +165,38 @@ class ClientTest
         );
 
         $dummy_data = $this->getDummyData();
-        unset( $dummy_data[ 'data' ] );
+        $dummy_data[ 'content' ] = [];
 
         $mock_strategy
             ->method( 'getDocumentData' )
             ->willReturn( $dummy_data );
+
+        $sut->getDocument( 0 );
+    }
+
+
+    /**
+     * @expectedException Lovullo\Liza\Client\BadClientDataException
+     * @expectedExceptionMessageRegExp /missing content/
+     */
+    public function testFailsIfDocumentContentsNotProvided()
+    {
+        $mock_strategy       = $this->createMockStrategy();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        // missing 'content'
+        $document = [ 'id' => '' ];
+
+        $mock_strategy
+            ->method( 'getDocumentData' )
+            ->willReturn( $document );
 
         $sut->getDocument( 0 );
     }
