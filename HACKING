@@ -1,0 +1,37 @@
+Hacking libliza-php
+===================
+These are general notes to internal developers of libliza-php.
+
+
+Local Development
+-----------------
+For local development, setting up a symlink to the project using libliza-php
+is easiest.  For example:
+
+```
+$ rm -rf ~/gitrepos/project/vendor/lovullo/libliza-php
+$ ln -s ~/gitrepos/libliza-php !:2
+```
+
+
+Deploying To Packagist
+----------------------
+Packagist is set up to monitor tags to the GitHub repository.
+To trigger this, simply push to the github remote:
+
+```
+# if you don't already have it set up
+$ git remote add github git@github.com:lovullo/libliza-php
+
+$ git push github && git push github --tags
+```
+
+
+
+Copyright 2018 R-T Specialty, LLC.
+
+  Copying and distribution of this file, with or without modification, are
+  permitted in any medium without royalty provided the copyright notice and
+  this notice are preserved.  This file is offered as-is, without warranty
+  of any kind.
+

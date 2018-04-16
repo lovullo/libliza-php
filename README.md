@@ -3,6 +3,15 @@ libliza-php is a PHP client abstraction for the [Liza Data Collection
 Framework](https://github.com/lovullo/liza) server.
 
 
+## How To Use
+This library is available on Packagist.  To use, install via composer.
+
+
+## Hacking
+See `README.hacking` for information on hacking libliza-php, including
+instructions for deploying to Packagist.
+
+
 ## License
 libliza-php is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
