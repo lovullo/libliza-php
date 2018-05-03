@@ -33,7 +33,7 @@ class DocumentFactoryTest
         return $this->getMockBuilder(
             'Lovullo\Liza\Document\DocumentFactory'
         )
-            ->setMethods( array( 'createDocument' ) )
+            ->setMethods( [ 'createDocument' ] )
             ->getMock();
     }
 
@@ -53,12 +53,13 @@ class DocumentFactoryTest
         $obj    = new \StdClass();
         $bucket = $this->createDummyBucket();
         $doc_id = 'ABC123';
-        $data   = array( 'id' => $doc_id );
+        $meta   = [ 'metafoo' => 'bar' ];
+        $data   = [ 'id' => $doc_id, 'content' => $meta ];
 
         $sut
             ->expects( $this->once() )
             ->method( 'createDocument' )
-            ->with( $doc_id, $bucket )
+            ->with( $doc_id, $bucket, $meta )
             ->willReturn( $obj );
 
         $this->assertSame(
@@ -76,6 +77,6 @@ class DocumentFactoryTest
         $sut    = $this->createSut();
         $bucket = $this->createDummyBucket();
 
-        $sut->fromData( array(), $bucket );
+        $sut->fromData( [], $bucket );
     }
 }

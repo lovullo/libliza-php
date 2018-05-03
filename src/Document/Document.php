@@ -46,6 +46,13 @@ class Document
      */
     private $_bucket = null;
 
+    /**
+     * Document metadata
+     *
+     * @var array
+     */
+    private $_meta = [];
+
 
     /**
      * Initialize document with identifier and key/value store
@@ -54,11 +61,13 @@ class Document
      *
      * @param string $doc_id document identifier
      * @param Bucket $bucket document key/value store
+     * @param array  $meta   document metadata
      */
-    public function __construct( $doc_id, Bucket $bucket )
+    public function __construct( $doc_id, Bucket $bucket, array $meta = [] )
     {
         $this->_id     = (string)$doc_id;
         $this->_bucket = $bucket;
+        $this->_meta   = $meta;
     }
 
 
@@ -70,6 +79,19 @@ class Document
     public function getId()
     {
         return $this->_id;
+    }
+
+
+    /**
+     * Get program identifier
+     *
+     * @return string program id or empty string if unknown
+     */
+    public function getProgramId()
+    {
+        $program_id = &$this->_meta[ 'programId' ];
+
+        return (string)$program_id;
     }
 
 
