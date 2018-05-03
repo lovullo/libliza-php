@@ -8,7 +8,7 @@ This library is available on Packagist.  To use, install via composer.
 
 
 ## Hacking
-See `README.hacking` for information on hacking libliza-php, including
+See `HACKING` for information on hacking libliza-php, including
 instructions for deploying to Packagist.
 
 
