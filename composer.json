@@ -1,7 +1,7 @@
 {
     "name": "lovullo/libliza-php",
     "description": "PHP client for the Liza Data Collection Framework",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "type": "project",
     "keywords": [ "liza" ],
     "license": "GPL-3.0+",
