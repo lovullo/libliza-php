@@ -33,10 +33,11 @@ class DocumentFactory
     /**
      * Create document from given raw document data
      *
-     * The document data $doc_data should be an array of metadata containing
-     * at least a key named 'id' containing the document identifier.
+     * The document data $doc_data should be an array containing at least a
+     * key named 'id' containing the document identifier and 'content'
+     * containing document metadata.  This corresponds to the '/init' request.
      *
-     * @param array  $doc_data document metadata
+     * @param array  $doc_data document init response data
      * @param Bucket $bucket   document key/value store
      *
      * @return Document
@@ -48,13 +49,21 @@ class DocumentFactory
         if ( empty( $doc_data[ 'id' ] ) )
         {
             throw new BadDocumentDataException(
-                'Invalid or incomplete document data'
+                "Invalid or incomplete document data: missing 'id'"
+            );
+        }
+
+        if ( empty( $doc_data[ 'content' ] ) )
+        {
+            throw new BadDocumentDataException(
+                "Invalid or incomplete document data: missing 'content'"
             );
         }
 
         $doc_id = $doc_data[ 'id' ];
+        $meta   = $doc_data[ 'content' ];
 
-        return $this->createDocument( $doc_id, $bucket );
+        return $this->createDocument( $doc_id, $bucket, $meta );
     }
 
 
@@ -63,15 +72,18 @@ class DocumentFactory
      *
      * This exists to permit subtypes to override behavior.
      *
-     * @param array  $doc_data document metadata
-     * @param Bucket $bucket   document key/value store
+     * @param integer $doc_id document identifier
+     * @param Bucket  $bucket document key/value store
+     * @param array   $meta   document metadata
      *
      * @return Document
      *
      * @codeCoverageIgnore constructor
      */
-    protected function createDocument( $doc_id, Bucket $bucket )
+    protected function createDocument(
+        $doc_id, Bucket $bucket, array $meta = []
+    )
     {
-        return new Document( $doc_id, $bucket );
+        return new Document( $doc_id, $bucket, $meta );
     }
 }

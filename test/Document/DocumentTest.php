@@ -38,9 +38,9 @@ class DocumentTest
     }
 
 
-    protected function createSut( $id, $bucket )
+    protected function createSut( $id, $bucket, $meta = [] )
     {
-        return new Sut( $id, $bucket );
+        return new Sut( $id, $bucket, $meta );
     }
 
 
@@ -60,6 +60,32 @@ class DocumentTest
         $this->assertSame(
             '1234',
             $this->createSut( 1234, $this->getDummyBucket() )->getId()
+        );
+    }
+
+
+    public function programIdDataProvider()
+    {
+        return [
+            [ [ 'programId' => 'fooprog' ], 'fooprog' ],
+            [ [ 'programId' => '' ], '' ],
+            [ [], '' ],
+        ];
+    }
+
+
+    /**
+     * @dataProvider programIdDataProvider
+     */
+    public function testProgramIdReturnedAsString( array $meta, $expected )
+    {
+        $this->assertEquals(
+            $expected,
+            $this->createSut(
+                1234,
+                $this->getDummyBucket(),
+                $meta
+            )->getProgramId()
         );
     }
 
