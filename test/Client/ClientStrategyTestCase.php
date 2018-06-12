@@ -41,7 +41,7 @@ abstract class ClientStrategyTestCase
     }
 
 
-    public function testDataAreReturnedAsAnArray()
+    public function testGetDocumentDataReturnsAnArray()
     {
         $this->assertTrue(
             is_array( $this->createSut()->getDocumentData( 0 ) )
@@ -53,9 +53,9 @@ abstract class ClientStrategyTestCase
      * What was requested might not be what the server wants to return
      * (maybe there's an alias, redirect, etc).
      *
-     * @depends testDataAreReturnedAsAnArray
+     * @depends testGetDocumentDataReturnsAnArray
      */
-    public function testDataContainsDocumentId()
+    public function testGetDocumentDataContainsDocumentId()
     {
         $given = $this->createSut()->getDocumentData( 0 );
 
@@ -64,11 +64,45 @@ abstract class ClientStrategyTestCase
 
 
     /**
-     * @depends testDataAreReturnedAsAnArray
+     * @depends testGetDocumentDataReturnsAnArray
      */
-    public function testDataContainsKeyValueStoreData()
+    public function testGetDocumentDataContainsKeyValueStoreData()
     {
         $given = $this->createSut()->getDocumentData( 0 );
+
+        $this->assertArrayHasKey( 'data', $given );
+        $this->assertTrue( is_array( $given ) );
+    }
+
+
+    public function testGetProgramDataReturnsAnArray()
+    {
+        $this->assertTrue(
+            is_array( $this->createSut()->getProgramData( 0 ) )
+        );
+    }
+
+
+    /**
+     * What was requested might not be what the server wants to return
+     * (maybe there's an alias, redirect, etc).
+     *
+     * @depends testGetProgramDataReturnsAnArray
+     */
+    public function testGetProgramDataContainsDocumentId()
+    {
+        $given = $this->createSut()->getProgramData( 0 );
+
+        $this->assertArrayHasKey( 'id', $given );
+    }
+
+
+    /**
+     * @depends testGetProgramDataReturnsAnArray
+     */
+    public function testGetProgramDataContainsKeyValueStoreData()
+    {
+        $given = $this->createSut()->getProgramData( 0 );
 
         $this->assertArrayHasKey( 'data', $given );
         $this->assertTrue( is_array( $given ) );

@@ -94,6 +94,31 @@ class Client
 
 
     /**
+     * Retrieve program data by given id
+     *
+     * @param string $doc_id document identifier
+     *
+     * @return array program data
+     *
+     * @throws BadClientDataException if program data is invalid or missing
+     */
+    public function getProgramData( $doc_id )
+    {
+        $program_data = $this->_strategy->getProgramData( $doc_id );
+
+        if ( empty( $program_data[ 'data' ] )
+            || !is_array( $program_data[ 'data' ] ) )
+        {
+            throw new BadClientDataException(
+                "Invalid or missing program data"
+            );
+        }
+
+        return $program_data[ 'data' ];
+    }
+
+
+    /**
      * Retrieve bucket data
      *
      * The data are expected to reside in `data` of `$doc_data`, and must be
