@@ -94,10 +94,24 @@ class RestClientStrategyTest
 
         $sut->expects( $this->once() )
             ->method( 'queryDocument' )
-            ->with( $url, $this->anything() )
+            ->with( $url, $this->anything(), 'init' )
             ->willReturn( $this->getDummyData() );
 
         $sut->getDocumentData( 0 );
+    }
+
+
+    public function testGetProgramDataIsGivenProperBaseUrl()
+    {
+        $url = 'https://bar.foo/test/';
+        $sut = $this->createPlainSut( $url );
+
+        $sut->expects( $this->once() )
+            ->method( 'queryDocument' )
+            ->with( $url, $this->anything(), 'progdata' )
+            ->willReturn( $this->getDummyData() );
+
+        $sut->getProgramData( 0 );
     }
 
 
@@ -108,7 +122,7 @@ class RestClientStrategyTest
 
         $sut->expects( $this->once() )
             ->method( 'queryDocument' )
-            ->with( $this->anything(), $id )
+            ->with( $this->anything(), $id, 'init' )
             ->willReturn( $this->getDummyData() );
 
         $sut->getDocumentData( $id );
@@ -199,6 +213,36 @@ class RestClientStrategyTest
 
         $this->assertEquals(
             $url . $id . '/init?skey=' . $skey,
+            $file_get_contents_url
+        );
+
+        $this->assertArrayHasKey( 'worked', $result );
+    }
+
+
+    public function testGetProgramDataRequestsBaseUrlWithIdAndProgData()
+    {
+        global $file_get_contents_url,
+            $file_get_contents_ret;
+
+        $url = 'https://foo/document/';
+        $id  = 'FOO456';
+
+        // no mocking at all now
+        $skey = 'testkey456';
+        $sut  = new Sut( $url, $skey );
+
+        $dummy_data = $this->getDummyData();
+        $dummy_data[ 'worked' ] = 'ok';
+
+        // the test will fail unless this JSON-decodes into an array
+        $file_get_contents_ret = json_encode( $dummy_data );
+
+        // see mock file_get_contents at top of this file
+        $result = $sut->getProgramData( $id );
+
+        $this->assertEquals(
+            $url . $id . '/progdata?skey=' . $skey,
             $file_get_contents_url
         );
 

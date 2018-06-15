@@ -36,4 +36,14 @@ interface ClientStrategy
      * @return array document data
      */
     public function getDocumentData( $doc_id );
+
+
+    /**
+     * Retrieve program, data for document identified by given id
+     *
+     * @param string $doc_id document id
+     *
+     * @return array program data
+     */
+    public function getProgramData( $doc_id );
 }

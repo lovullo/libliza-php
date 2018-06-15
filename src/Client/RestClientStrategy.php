@@ -66,6 +66,9 @@ class RestClientStrategy
     /**
      * Retrieve data for document identified by given id
      *
+     * Until a better API is available, this simply uses the `/init`
+     * request, which returns all the data we need.
+     *
      * @param string $doc_id document id
      *
      * @return array document data
@@ -75,12 +78,31 @@ class RestClientStrategy
         $doc_id = (string)$doc_id;
 
         $doc_data = $this->translateDocId(
-            $this->queryDocument( $this->_base_url, $doc_id )
+            $this->queryDocument( $this->_base_url, $doc_id, 'init' )
         );
 
         $this->verifyData( $doc_data );
 
         return $doc_data;
+    }
+
+
+    /**
+     * Retrieve program data for document identified by given id
+     *
+     * @param string $doc_id document id
+     *
+     * @return array program data
+     */
+    public function getProgramData( $doc_id )
+    {
+        $doc_id = (string)$doc_id;
+
+        $program_data = $this->translateDocId(
+            $this->queryDocument( $this->_base_url, $doc_id, 'progdata' )
+        );
+
+        return $program_data;
     }
 
 
@@ -94,17 +116,15 @@ class RestClientStrategy
      *
      * No trailing slash will be added to $base_url.
      *
-     * Until a better API is available, this simply uses the `/init`
-     * request, which returns all the data we need.
-     *
      * @param string $base_url base URL for REST service
      * @param string $doc_id   id of document to retrieve
+     * @param string $endpoint endpoint for REST service
      *
      * @return array document data
      */
-    protected function queryDocument( $base_url, $doc_id )
+    protected function queryDocument( $base_url, $doc_id, $endpoint )
     {
-        $url = $base_url . $doc_id . '/init?skey=' . $this->_skey;
+        $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
 
         return json_decode(
             file_get_contents( $url ),

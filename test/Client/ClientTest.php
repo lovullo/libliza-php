@@ -226,4 +226,64 @@ class ClientTest
 
         $sut->getDocument( 0 );
     }
+
+
+    public function testRetrievesProgramDataForGivenId()
+    {
+        $mock_strategy       = $this->createMockStrategy();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $doc_id = 'FOO123';
+
+        $expected = [ 'foo' => 'bar' ];
+
+        $doc_data = [
+            'error' => null,
+            'data' => $expected,
+        ];
+
+        $mock_strategy
+            ->expects( $this->once() )
+            ->method( 'getProgramData' )
+            ->with( $doc_id )
+            ->willReturn( $doc_data );
+
+        $given = $sut->getProgramData( $doc_id );
+
+        $this->assertEquals( $expected, $given );
+    }
+
+
+    /**
+     * @expectedException Lovullo\Liza\Client\BadClientDataException
+     */
+    public function testFailsIfProgramDataNotAnArray()
+    {
+        $mock_strategy       = $this->createMockStrategy();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $doc_id = '345678';
+
+        $mock_strategy
+            ->expects( $this->once() )
+            ->method( 'getProgramData' )
+            ->with( $doc_id )
+            ->willReturn( '' );
+
+        $sut->getProgramData( $doc_id );
+    }
 }
