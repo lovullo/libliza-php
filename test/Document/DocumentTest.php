@@ -31,9 +31,9 @@ class DocumentTest
     protected function getDummyBucket()
     {
         return $this->getMockBuilder(
-            'Lovullo\Liza\Bucket\Bucket'
+            "Lovullo\Liza\Bucket\Bucket"
         )
-            ->setMethods( array( 'getDataByName', 'hasData' ) )
+            ->setMethods( array( "getDataByName", "hasData" ) )
             ->getMock();
     }
 
@@ -46,7 +46,7 @@ class DocumentTest
 
     public function testReturnsDocumentId()
     {
-        $id = '123456';
+        $id = "123456";
 
         $this->assertEquals(
             $id,
@@ -58,34 +58,8 @@ class DocumentTest
     public function testIdReturnedAsAString()
     {
         $this->assertSame(
-            '1234',
+            "1234",
             $this->createSut( 1234, $this->getDummyBucket() )->getId()
-        );
-    }
-
-
-    public function programIdDataProvider()
-    {
-        return [
-            [ [ 'programId' => 'fooprog' ], 'fooprog' ],
-            [ [ 'programId' => '' ], '' ],
-            [ [], '' ],
-        ];
-    }
-
-
-    /**
-     * @dataProvider programIdDataProvider
-     */
-    public function testProgramIdReturnedAsString( array $meta, $expected )
-    {
-        $this->assertEquals(
-            $expected,
-            $this->createSut(
-                1234,
-                $this->getDummyBucket(),
-                $meta
-            )->getProgramId()
         );
     }
 
@@ -96,7 +70,73 @@ class DocumentTest
 
         $this->assertSame(
             $bucket,
-            $this->createSut( 'foo', $bucket )->getBucket()
+            $this->createSut( "foo", $bucket )->getBucket()
+        );
+    }
+
+
+    public function gettersDataProvider()
+    {
+        return [
+            [ [ "agentId" => "fooagentid" ], "fooagentid" ],
+            [ [ "agentId" => "" ], "" ],
+            [ [ "agentName" => "fooagentname" ], "fooagentname" ],
+            [ [ "agentName" => "" ], "" ],
+            [ [ "programId" => "fooprog" ], "fooprog" ],
+            [ [ "programId" => "" ], "" ],
+            [ [ "agentEntityId" => "fooaei" ], "fooaei" ],
+            [ [ "agentEntityId" => "" ], "" ],
+            [ [ "initialRatedDate" => "fooird" ], "fooird" ],
+            [ [ "initialRatedDate" => "" ], "" ],
+            [ [ "startDate" => "foosd" ], "foosd" ],
+            [ [ "startDate" => "" ], "" ],
+        ];
+    }
+
+
+    /**
+     * @dataProvider gettersDataProvider
+     */
+    public function testGetters( array $meta, $expected )
+    {
+        $methodName = "get" . ucfirst( array_keys( $meta )[0] );
+
+        $this->assertEquals(
+            $expected,
+            $this->createSut(
+                1234,
+                $this->getDummyBucket(),
+                $meta
+            )->$methodName()
+        );
+    }
+
+
+    public function emptyGettersDataProvider()
+    {
+        return [
+            [ "getProgramId" ],
+            [ "getAgentId" ],
+            [ "getAgentName" ],
+            [ "getAgentEntityId" ],
+            [ "getInitialRatedDate" ],
+            [ "getStartDate" ],
+        ];
+    }
+
+
+    /**
+     * @dataProvider emptyGettersDataProvider
+     */
+    public function testEmptyGetters( $methodName )
+    {
+        $this->assertEquals(
+            "",
+            $this->createSut(
+                1234,
+                $this->getDummyBucket(),
+                []
+            )->$methodName()
         );
     }
 }

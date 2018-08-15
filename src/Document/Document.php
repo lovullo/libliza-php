@@ -37,7 +37,7 @@ class Document
      *
      * @var string
      */
-    private $_id = '';
+    private $_id = "";
 
     /**
      * Document key/value store
@@ -89,9 +89,62 @@ class Document
      */
     public function getProgramId()
     {
-        $program_id = &$this->_meta[ 'programId' ];
+        return $this->_getMetaByName( "programId" );
+    }
 
-        return (string)$program_id;
+
+    /**
+     * Get agent identifier
+     *
+     * @return string agent id or empty string if unknown
+     */
+    public function getAgentId()
+    {
+        return $this->_getMetaByName( "agentId" );
+    }
+
+
+    /**
+     * Get agent entity identifier (i.e. the user id)
+     *
+     * @return string agent entity id or empty string if unknown
+     */
+    public function getAgentEntityId()
+    {
+        return $this->_getMetaByName( "agentEntityId" );
+    }
+
+
+    /**
+     * Get the initial rated date.
+     *
+     * @return int A unix timestamp for the initial rating date
+     */
+    public function getInitialRatedDate()
+    {
+        return $this->_getMetaByName( "initialRatedDate" );
+    }
+
+
+    /**
+     * Get the start date.
+     *
+     * @return int A unix timestamp for the start date
+     */
+    public function getStartDate()
+    {
+        return $this->_getMetaByName( "startDate" );
+    }
+
+
+    /**
+     * Get agent name
+     *
+     * @return string agent name or empty string if unknown
+     */
+    public function getAgentName()
+    {
+        return $this->_getMetaByName( "agentName" );
     }
 
 
@@ -103,5 +156,19 @@ class Document
     public function getBucket()
     {
         return $this->_bucket;
+    }
+
+
+    /**
+     * Get metadata by key name
+     *
+     * @param String The name of the key holding the data.
+     *
+     * @return string metadata or empty string if unknown
+     */
+    private function _getMetaByName( $name )
+    {
+        $data = &$this->_meta[ $name ];
+        return (string)$data;
     }
 }
