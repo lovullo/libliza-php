@@ -24,7 +24,6 @@ namespace Lovullo\Liza\Tests\Document;
 
 use \Lovullo\Liza\Document\Document as Sut;
 
-
 class DocumentTest
     extends \PHPUnit_Framework_TestCase
 {
@@ -116,11 +115,6 @@ class DocumentTest
     {
         return [
             [ "getProgramId" ],
-            [ "getAgentId" ],
-            [ "getAgentName" ],
-            [ "getAgentEntityId" ],
-            [ "getInitialRatedDate" ],
-            [ "getStartDate" ],
         ];
     }
 
@@ -138,5 +132,31 @@ class DocumentTest
                 []
             )->$methodName()
         );
+    }
+
+
+    public function exceptionGettersDataProvider()
+    {
+        return [
+            [ "getAgentId" ],
+            [ "getAgentName" ],
+            [ "getAgentEntityId" ],
+            [ "getInitialRatedDate" ],
+            [ "getStartDate" ],
+        ];
+    }
+
+
+    /**
+     * @dataProvider exceptionGettersDataProvider
+     * @expectedException \Lovullo\Liza\Document\MissingDocumentFieldException
+     */
+    public function testExceptionGetters( $methodName )
+    {
+        $this->createSut(
+            1234,
+            $this->getDummyBucket(),
+            []
+        )->$methodName();
     }
 }

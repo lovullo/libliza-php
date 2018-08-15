@@ -47,11 +47,11 @@ class Document
     private $_bucket = null;
 
     /**
-     * Document metadata
+     * Document fields
      *
      * @var array
      */
-    private $_meta = [];
+    private $_fields = [];
 
 
     /**
@@ -61,13 +61,13 @@ class Document
      *
      * @param string $doc_id document identifier
      * @param Bucket $bucket document key/value store
-     * @param array  $meta   document metadata
+     * @param array  $fields document fields
      */
-    public function __construct( $doc_id, Bucket $bucket, array $meta = [] )
+    public function __construct( $doc_id, Bucket $bucket, array $fields = [] )
     {
         $this->_id     = (string)$doc_id;
         $this->_bucket = $bucket;
-        $this->_meta   = $meta;
+        $this->_fields = $fields;
     }
 
 
@@ -89,7 +89,16 @@ class Document
      */
     public function getProgramId()
     {
-        return $this->_getMetaByName( "programId" );
+        // This existed before MissingDocumentFieldException and
+        // was expected to not throw an exception when it does not exist.
+        try
+        {
+            return (string)$this->_getFieldByName( "programId" );
+        }
+        catch ( MissingDocumentFieldException $e )
+        {
+            return "";
+        }
     }
 
 
@@ -100,7 +109,7 @@ class Document
      */
     public function getAgentId()
     {
-        return $this->_getMetaByName( "agentId" );
+        return $this->_getFieldByName( "agentId" );
     }
 
 
@@ -111,7 +120,7 @@ class Document
      */
     public function getAgentEntityId()
     {
-        return $this->_getMetaByName( "agentEntityId" );
+        return $this->_getFieldByName( "agentEntityId" );
     }
 
 
@@ -122,7 +131,7 @@ class Document
      */
     public function getInitialRatedDate()
     {
-        return $this->_getMetaByName( "initialRatedDate" );
+        return $this->_getFieldByName( "initialRatedDate" );
     }
 
 
@@ -133,7 +142,7 @@ class Document
      */
     public function getStartDate()
     {
-        return $this->_getMetaByName( "startDate" );
+        return $this->_getFieldByName( "startDate" );
     }
 
 
@@ -144,7 +153,7 @@ class Document
      */
     public function getAgentName()
     {
-        return $this->_getMetaByName( "agentName" );
+        return $this->_getFieldByName( "agentName" );
     }
 
 
@@ -160,15 +169,19 @@ class Document
 
 
     /**
-     * Get metadata by key name
+     * Get fields by key name
      *
-     * @param String The name of the key holding the data.
-     *
-     * @return string metadata or empty string if unknown
+     * @param String The name of the key holding the data
+     * @return string field or empty string if unknown
+     * @throws MissingDocumentFieldException when the field does not exist
      */
-    private function _getMetaByName( $name )
+    private function _getFieldByName( $name )
     {
-        $data = &$this->_meta[ $name ];
-        return (string)$data;
+        if ( array_key_exists( $name, $this->_fields ) )
+        {
+            return $this->_fields[ $name ];
+        }
+
+        throw new MissingDocumentFieldException( "Missing field data" );
     }
 }
