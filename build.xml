@@ -1,17 +1,10 @@
 <?xml version="1.0"?>
 <project name="libliza-php" default="build">
-  <property name="phpunitconfig" value="${basedir}/test/"/>
-  <property name="phpcsignore" value="vendor/,test/" />
-  <property name="phpmdignore" value="vendor/,test/" />
-
-  <import file="${basedir}/vendor/lovullo/phpqaconfig/build.xml"/>
-
 
   <target name="build"
           description="Compile all dependent code">
     <!-- nothing yet -->
   </target>
-
 
   <target name="setup"
           description="Perform initial repository setup tasks">
@@ -24,18 +17,15 @@
     <antcall target="build" />
   </target>
 
-
   <!-- standard target in Makefiles -->
   <target name="check"
           description="Run tests"
-          depends="phpunit, diagram-chk" />
-
+          depends="diagram-chk" />
 
   <!-- alias for check -->
   <target name="test"
           description="Run tests"
           depends="check" />
-
 
   <target name="diagram-chk"
           description="QA check on diagrams">
@@ -48,5 +38,5 @@
         <arg line="-s 1500 -e build/class-uml.png doc/diagrams/class-uml.dia" />
     </exec>
   </target>
-</project>
 
+</project>
