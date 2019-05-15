@@ -32,7 +32,7 @@ class DocumentTest
         return $this->getMockBuilder(
             "Lovullo\Liza\Bucket\Bucket"
         )
-            ->setMethods( array( "getDataByName", "hasData" ) )
+            ->setMethods( array( "getDataByName", "hasData", "getDataByRegEx" ) )
             ->getMock();
     }
 
