@@ -76,6 +76,22 @@ abstract class BucketTestCase
 
 
     /**
+     * The bucket data should be retrievable by the RegEx, so long as
+     * it exists.
+     */
+    public function testGetDataByRegEx()
+    {
+        $key = '_foo';
+        $result = $this->getSut( $this->_initialData )->getDataByRegEx( '/'. $key .'/' );
+        $this->assertEquals(
+            $this->_initialData[ $key ],
+            $result[ $key ],
+            'Bucket should return the value identified by a given name'
+        );
+    }
+
+
+    /**
      * PHP < 5.4's lack of array dereferencing support can be rather
      * frustrating.  As such, getDataByName() should also accept an index to
      * return the value of.

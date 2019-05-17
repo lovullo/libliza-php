@@ -51,6 +51,18 @@ interface Bucket
 
 
     /**
+     * Return the values associated with the provided regex
+     *
+     * @param string $regex  regex for key
+     *
+     * @return array values associated with the key
+     *
+     * @throws \DomainException if requested index does not exist
+     */
+    public function getDataByRegEx( $regex );
+
+
+    /**
      * Whether the given key and (optionally) index exist
      *
      * @param string $name  name of key
