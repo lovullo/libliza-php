@@ -62,12 +62,33 @@ class ImmutableBucket
 
 
     /**
+     * Return the values associated with the provided regex
+     *
+     * @param string $regex regex for key
+     *
+     * @return array values associated with the key
+     */
+    public function getDataByRegEx( $regex )
+    {
+        $data      = [];
+        $data_keys = preg_grep( $regex, array_keys( $this->_data ) );
+
+        foreach ( $data_keys as $key )
+        {
+            $data[ $key ] = $this->getDataByName( $key );
+        }
+
+        return $data;
+    }
+
+
+    /**
      * Return the values associated with the provided key
      *
      * This method accepts an index due to PHP's lack of array dereferencing
      * support prior to 5.4.
      *
-     * @param string $name  name of key
+     * @param string $name name of key
      * @param int    $index index to return
      *
      * @return array values associated with the key
