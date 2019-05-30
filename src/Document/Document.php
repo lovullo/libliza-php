@@ -136,6 +136,17 @@ class Document
 
 
     /**
+     * Get the last rated date.
+     *
+     * @return int A unix timestamp for the last rating date
+     */
+    public function getLastPremDate()
+    {
+        return $this->_getFieldByName( "lastPremDate" );
+    }
+
+
+    /**
      * Get the start date.
      *
      * @return int A unix timestamp for the start date
