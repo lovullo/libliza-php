@@ -87,6 +87,8 @@ class DocumentTest
             [ [ "agentEntityId" => "" ], "" ],
             [ [ "initialRatedDate" => "fooird" ], "fooird" ],
             [ [ "initialRatedDate" => "" ], "" ],
+            [ [ "lastPremDate" => "12344321" ], "12344321" ],
+            [ [ "lastPremDate" => "" ], "" ],
             [ [ "startDate" => "foosd" ], "foosd" ],
             [ [ "startDate" => "" ], "" ],
         ];
@@ -142,6 +144,7 @@ class DocumentTest
             [ "getAgentName" ],
             [ "getAgentEntityId" ],
             [ "getInitialRatedDate" ],
+            [ "getLastPremDate" ],
             [ "getStartDate" ],
         ];
     }
