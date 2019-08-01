@@ -37,14 +37,19 @@ class DocumentFactory
      * key named 'id' containing the document identifier and 'content'
      * containing document metadata.  This corresponds to the '/init' request.
      *
-     * @param array  $doc_data document init response data
-     * @param Bucket $bucket   document key/value store
+     * @param array  $doc_data    document init response data
+     * @param Bucket $bucket      document data key/value store
+     * @param Bucket $meta_bucket document meta key/value store
      *
      * @return Document
      *
      * @throws BadDocumentDataException if `id` key is missing or empty
      */
-    final public function fromData( array $doc_data, Bucket $bucket )
+    final public function fromData(
+        array  $doc_data,
+        Bucket $bucket,
+        Bucket $meta_bucket
+    )
     {
         if ( empty( $doc_data[ 'id' ] ) )
         {
@@ -63,7 +68,7 @@ class DocumentFactory
         $doc_id = $doc_data[ 'id' ];
         $meta   = $doc_data[ 'content' ];
 
-        return $this->createDocument( $doc_id, $bucket, $meta );
+        return $this->createDocument( $doc_id, $bucket, $meta_bucket, $meta );
     }
 
 
@@ -72,18 +77,22 @@ class DocumentFactory
      *
      * This exists to permit subtypes to override behavior.
      *
-     * @param integer $doc_id document identifier
-     * @param Bucket  $bucket document key/value store
-     * @param array   $meta   document metadata
+     * @param integer $doc_id      document identifier
+     * @param Bucket  $bucket      document data key/value store
+     * @param Bucket  $meta_bucket document meta key/value store
+     * @param array   $meta        document metadata
      *
      * @return Document
      *
      * @codeCoverageIgnore constructor
      */
     protected function createDocument(
-        $doc_id, Bucket $bucket, array $meta = []
+        $doc_id,
+        Bucket $bucket,
+        Bucket $meta_bucket,
+        array $meta = []
     )
     {
-        return new Document( $doc_id, $bucket, $meta );
+        return new Document( $doc_id, $bucket, $meta_bucket, $meta );
     }
 }
