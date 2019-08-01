@@ -40,11 +40,18 @@ class Document
     private $_id = "";
 
     /**
-     * Document key/value store
+     * Document data key/value store
      *
      * @var Bucket
      */
     private $_bucket = null;
+
+    /**
+     * Document meta key/value store
+     *
+     * @var Bucket
+     */
+    private $_meta_bucket = null;
 
     /**
      * Document fields
@@ -59,15 +66,22 @@ class Document
      *
      * $id will be cast to a string.
      *
-     * @param string $doc_id document identifier
-     * @param Bucket $bucket document key/value store
-     * @param array  $fields document fields
+     * @param string $doc_id      document identifier
+     * @param Bucket $bucket      document data key/value store
+     * @param Bucket $meta_bucket document meta key/value store
+     * @param array  $fields      document fields
      */
-    public function __construct( $doc_id, Bucket $bucket, array $fields = [] )
+    public function __construct(
+        $doc_id,
+        Bucket $bucket,
+        Bucket $meta_bucket,
+        array $fields = []
+    )
     {
-        $this->_id     = (string)$doc_id;
-        $this->_bucket = $bucket;
-        $this->_fields = $fields;
+        $this->_id          = (string)$doc_id;
+        $this->_bucket      = $bucket;
+        $this->_meta_bucket = $meta_bucket;
+        $this->_fields      = $fields;
     }
 
 
@@ -169,7 +183,18 @@ class Document
 
 
     /**
-     * Retrieve document key/value store
+     * Retrieve document meta key/value store
+     *
+     * @return Bucket
+     */
+    public function getMetaBucket()
+    {
+        return $this->_meta_bucket;
+    }
+
+
+    /**
+     * Retrieve document data key/value store
      *
      * @return Bucket
      */

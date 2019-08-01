@@ -49,22 +49,23 @@ class DocumentFactoryTest
 
     public function testCreatesDocumentWithGivenDocumentData()
     {
-        $sut    = $this->createSut();
-        $obj    = new \StdClass();
-        $bucket = $this->createDummyBucket();
-        $doc_id = 'ABC123';
-        $meta   = [ 'metafoo' => 'bar' ];
-        $data   = [ 'id' => $doc_id, 'content' => $meta ];
+        $sut         = $this->createSut();
+        $obj         = new \StdClass();
+        $bucket      = $this->createDummyBucket();
+        $meta_bucket = $this->createDummyBucket();
+        $doc_id      = 'ABC123';
+        $meta        = [ 'metafoo' => 'bar' ];
+        $data        = [ 'id' => $doc_id, 'content' => $meta ];
 
         $sut
             ->expects( $this->once() )
             ->method( 'createDocument' )
-            ->with( $doc_id, $bucket, $meta )
+            ->with( $doc_id, $bucket, $meta_bucket, $meta )
             ->willReturn( $obj );
 
         $this->assertSame(
             $obj,
-            $sut->fromData( $data, $bucket )
+            $sut->fromData( $data, $bucket, $meta_bucket )
         );
     }
 
@@ -74,9 +75,10 @@ class DocumentFactoryTest
      */
     public function testFailsIfNoDocumentIdAvailableInData()
     {
-        $sut    = $this->createSut();
-        $bucket = $this->createDummyBucket();
+        $sut         = $this->createSut();
+        $bucket      = $this->createDummyBucket();
+        $meta_bucket = $this->createDummyBucket();
 
-        $sut->fromData( [], $bucket );
+        $sut->fromData( [], $bucket, $meta_bucket );
     }
 }

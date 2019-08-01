@@ -37,9 +37,9 @@ class DocumentTest
     }
 
 
-    protected function createSut( $id, $bucket, $meta = [] )
+    protected function createSut( $id, $bucket, $meta_bucket, $meta = [] )
     {
-        return new Sut( $id, $bucket, $meta );
+        return new Sut( $id, $bucket, $meta_bucket, $meta );
     }
 
 
@@ -49,7 +49,11 @@ class DocumentTest
 
         $this->assertEquals(
             $id,
-            $this->createSut( $id, $this->getDummyBucket() )->getId()
+            $this->createSut(
+                $id,
+                $this->getDummyBucket(),
+                $this->getDummyBucket()
+            )->getId()
         );
     }
 
@@ -58,18 +62,35 @@ class DocumentTest
     {
         $this->assertSame(
             "1234",
-            $this->createSut( 1234, $this->getDummyBucket() )->getId()
+            $this->createSut(
+                1234,
+                $this->getDummyBucket(),
+                $this->getDummyBucket()
+            )->getId()
         );
     }
 
 
     public function testReturnsBucket()
     {
-        $bucket = $this->getDummyBucket();
+        $bucket      = $this->getDummyBucket();
+        $meta_bucket = $this->getDummyBucket();
 
         $this->assertSame(
             $bucket,
-            $this->createSut( "foo", $bucket )->getBucket()
+            $this->createSut( "foo", $bucket, $meta_bucket )->getBucket()
+        );
+    }
+
+
+    public function testReturnsMetaBucket()
+    {
+        $bucket      = $this->getDummyBucket();
+        $meta_bucket = $this->getDummyBucket();
+
+        $this->assertSame(
+            $meta_bucket,
+            $this->createSut( "foo", $bucket, $meta_bucket )->getMetaBucket()
         );
     }
 
@@ -107,6 +128,7 @@ class DocumentTest
             $this->createSut(
                 1234,
                 $this->getDummyBucket(),
+                $this->getDummyBucket(),
                 $meta
             )->$methodName()
         );
@@ -130,6 +152,7 @@ class DocumentTest
             "",
             $this->createSut(
                 1234,
+                $this->getDummyBucket(),
                 $this->getDummyBucket(),
                 []
             )->$methodName()
@@ -158,6 +181,7 @@ class DocumentTest
     {
         $this->createSut(
             1234,
+            $this->getDummyBucket(),
             $this->getDummyBucket(),
             []
         )->$methodName();

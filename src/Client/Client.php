@@ -88,6 +88,9 @@ class Client
             $doc_data,
             $this->_bucket_factory->fromData(
                 $this->getBucketData( $doc_data )
+            ),
+            $this->_bucket_factory->fromData(
+                $this->getMetaBucketData( $doc_data )
             )
         );
     }
@@ -153,4 +156,43 @@ class Client
 
         return $content[ 'data' ];
     }
+
+
+    /**
+     * Retrieve meta bucket data
+     *
+     * The data are expected to reside in `meta` of `$doc_data`, and must be
+     * an array.
+     *
+     * @param array $doc_data document data
+     *
+     * @return array bucket data
+     *
+     * @throws BadClientDataException if document content is invalid or missing
+     * @throws BadClientDataException if data are invalid or missing
+     */
+    protected function getMetaBucketData( array $doc_data )
+    {
+        if ( !isset( $doc_data[ 'content' ] )
+            || !is_array( $doc_data[ 'content' ] ) )
+        {
+            throw new BadClientDataException(
+                "Invalid or missing content data"
+            );
+        }
+
+        $content = $doc_data[ 'content' ];
+
+        if ( empty( $content[ 'meta' ] )
+            || !is_array( $content[ 'meta' ] ) )
+        {
+            throw new BadClientDataException(
+                "Invalid or missing meta data"
+            );
+        }
+
+        return $content[ 'meta' ];
+    }
+
+
 }

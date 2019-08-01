@@ -23,7 +23,7 @@
 namespace Lovullo\Liza\Tests\Client;
 
 use Lovullo\Liza\Client\Client as Sut;
-
+use Lovullo\Liza\Client\BadClientDataException;
 
 class ClientTest
     extends \PHPUnit_Framework_TestCase
@@ -91,6 +91,7 @@ class ClientTest
             'id'   => 0,
             'content' => [
                 'data' => [],
+                'meta' => [],
             ]
         ];
     }
@@ -108,16 +109,19 @@ class ClientTest
             $mock_bucket_factory
         );
 
-        $doc_request_id = 'REQUESTID';
-        $doc_id         = 'FOO123';
-        $bucket_data    = array( 'bucket' => 'data' );
-        $document       = $this->createDummyDocument();
-        $bucket         = $this->createDummyBucket();
+        $doc_request_id   = 'REQUESTID';
+        $doc_id           = 'FOO123';
+        $bucket_data      = array( 'bucket' => 'data' );
+        $meta_bucket_data = array( 'foo' => 'bar' );
+        $document         = $this->createDummyDocument();
+        $bucket           = $this->createDummyBucket();
+        $meta_bucket      = $this->createDummyBucket();
 
         $doc_data = [
             'id'      => $doc_id,
             'content' => [
                 'data' => $bucket_data,
+                'meta' => $meta_bucket_data,
             ],
         ];
 
@@ -128,15 +132,21 @@ class ClientTest
             ->willReturn( $doc_data );
 
         $mock_bucket_factory
-            ->expects( $this->once() )
+            ->expects( $this->at( 0 ) )
             ->method( 'fromData' )
             ->with( $bucket_data )
             ->willReturn( $bucket );
 
+        $mock_bucket_factory
+            ->expects( $this->at( 1 ) )
+            ->method( 'fromData' )
+            ->with( $meta_bucket_data )
+            ->willReturn( $meta_bucket );
+
         $mock_doc_factory
             ->expects( $this->once() )
             ->method( 'createDocument' )
-            ->with( $doc_id, $bucket )
+            ->with( $doc_id, $bucket, $meta_bucket )
             ->willReturn( $document );
 
         // this ensures that the document id that is actually used in the
@@ -148,10 +158,6 @@ class ClientTest
     }
 
 
-    /**
-     * @expectedException Lovullo\Liza\Client\BadClientDataException
-     * @expectedExceptionMessageRegExp /missing bucket data/
-     */
     public function testFailsIfBucketDataNotProvided()
     {
         $mock_strategy       = $this->createMockStrategy();
@@ -171,14 +177,15 @@ class ClientTest
             ->method( 'getDocumentData' )
             ->willReturn( $dummy_data );
 
+        $this->setExpectedExceptionRegexp(
+            BadClientDataException::class,
+            "/Invalid or missing bucket data/"
+        );
+
         $sut->getDocument( 0 );
     }
 
 
-    /**
-     * @expectedException Lovullo\Liza\Client\BadClientDataException
-     * @expectedExceptionMessageRegExp /missing content/
-     */
     public function testFailsIfDocumentContentsNotProvided()
     {
         $mock_strategy       = $this->createMockStrategy();
@@ -198,13 +205,15 @@ class ClientTest
             ->method( 'getDocumentData' )
             ->willReturn( $document );
 
+        $this->setExpectedExceptionRegexp(
+            BadClientDataException::class,
+            "/Invalid or missing content data/"
+        );
+
         $sut->getDocument( 0 );
     }
 
 
-    /**
-     * @expectedException Lovullo\Liza\Client\BadClientDataException
-     */
     public function testFailsIfBucketDataNotAnArray()
     {
         $mock_strategy       = $this->createMockStrategy();
@@ -218,11 +227,45 @@ class ClientTest
         );
 
         $dummy_data = $this->getDummyData();
-        $dummy_data[ 'data' ] = 'nonarray';
+        $dummy_data[ 'content' ][ 'data' ] = 'notarray';
 
         $mock_strategy
             ->method( 'getDocumentData' )
             ->willReturn( $dummy_data );
+
+        $this->setExpectedExceptionRegexp(
+            BadClientDataException::class,
+            "/Invalid or missing bucket data/"
+        );
+
+        $sut->getDocument( 0 );
+    }
+
+
+    public function testFailsIfMetaBucketDataNotAnArray()
+    {
+        $mock_strategy       = $this->createMockStrategy();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $dummy_data = $this->getDummyData();
+        $dummy_data[ 'content' ][ 'data' ] = [ 'foo' => 'bar' ];
+        $dummy_data[ 'content' ][ 'meta' ] = 'notarray';
+
+        $mock_strategy
+            ->method( 'getDocumentData' )
+            ->willReturn( $dummy_data );
+
+        $this->setExpectedExceptionRegexp(
+            BadClientDataException::class,
+            "/Invalid or missing meta data/"
+        );
 
         $sut->getDocument( 0 );
     }
@@ -261,9 +304,6 @@ class ClientTest
     }
 
 
-    /**
-     * @expectedException Lovullo\Liza\Client\BadClientDataException
-     */
     public function testFailsIfProgramDataNotAnArray()
     {
         $mock_strategy       = $this->createMockStrategy();
@@ -283,6 +323,11 @@ class ClientTest
             ->method( 'getProgramData' )
             ->with( $doc_id )
             ->willReturn( '' );
+
+        $this->setExpectedExceptionRegexp(
+            BadClientDataException::class,
+            "/Invalid or missing program data/"
+        );
 
         $sut->getProgramData( $doc_id );
     }
