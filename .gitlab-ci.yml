@@ -1,9 +1,12 @@
 image: lovullo/php-ci
 
 include:
-    - 'http://devops.pages.lovullo.com/shared-pipelines/jobs-common.yml'
-    - 'http://devops.pages.lovullo.com/shared-pipelines/jobs-composer-install.yml'
-    - 'http://devops.pages.lovullo.com/shared-pipelines/jobs-php-static-analysis.yml'
+    - project: 'devops/shared-pipelines'
+      file: '/jobs-common.yml'
+    - project: 'devops/shared-pipelines'
+      file: '/jobs-composer-install.yml'
+    - project: 'devops/shared-pipelines'
+      file: '/jobs-php-static-analysis.yml'
 
 variables:
     phpunit_config: "test/"
