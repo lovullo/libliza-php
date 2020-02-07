@@ -28,7 +28,7 @@ use Lovullo\Liza\Bucket\Bucket;
 abstract class BucketTestCase
     extends \PHPUnit_Framework_TestCase
 {
-    private $_initialData = array(
+    protected $_initialData = array(
         '_foo'    => array( 'foo', 'bar', 'baz' ),
         '_err'    => '5',
         '_badval' => array( 5 ),

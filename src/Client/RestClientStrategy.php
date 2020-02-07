@@ -107,6 +107,25 @@ class RestClientStrategy
 
 
     /**
+     * Send updated bucket data to the server
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     */
+    public function sendBucketData( $doc_id, $data )
+    {
+        $doc_id = (string)$doc_id;
+
+        $this->verifyData( $data[ 'data' ] );
+        $data[ 'data' ] = json_encode( $data[ 'data' ] );
+
+        return $this->postData( $this->_base_url, $doc_id, 'step/1/post', $data );
+    }
+
+
+    /**
      * Query server for document data
      *
      * TODO: This will eventually use a network abstraction; until that
@@ -130,6 +149,42 @@ class RestClientStrategy
             file_get_contents( $url ),
             true
         );
+    }
+
+
+    /**
+     * Post data to the server
+     *
+     * TODO: This will eventually use a network abstraction; until that
+     * time, a simple `file_get_contents` will be sort of acceptable, but
+     * not really, because we do not have proper error handling; this would
+     * fail simply because the caller's data validations would fail.
+     *
+     * No trailing slash will be added to $base_url.
+     *
+     * @param string $base_url Base URL for REST service
+     * @param string $doc_id   Id of document
+     * @param string $endpoint Endpoint for REST service
+     * @param array  $data     The data as an array
+     *
+     * @return
+     */
+    protected function postData( $base_url, $doc_id, $endpoint, $data )
+    {
+        $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
+
+        $content = http_build_query( $data );
+        $options = [
+            'http' => [
+                'method' => 'POST',
+                'header' => 'Content-type: application/x-www-form-urlencoded',
+                'content' => $content,
+                'timeout' => 60
+            ]
+        ];
+        $context = stream_context_create( $options );
+
+        return file_get_contents( $url, false, $context );
     }
 
 

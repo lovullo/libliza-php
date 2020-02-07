@@ -72,9 +72,24 @@ class Client
 
 
     /**
-     * Retrieve document by given id
+     * Initialize document data
      *
      * @param string $doc_id document identifier
+     *
+     * @return array document data
+     *
+     * @throws BadClientDataException if data are invalid or missing
+     */
+    public function getDocumentData( $doc_id )
+    {
+        return $this->_strategy->getDocumentData( $doc_id );
+    }
+
+
+    /**
+     * Retrieve document by given id
+     *
+     * @param string  $doc_id document identifier
      *
      * @return Document
      *
@@ -82,7 +97,7 @@ class Client
      */
     public function getDocument( $doc_id )
     {
-        $doc_data = $this->_strategy->getDocumentData( $doc_id );
+        $doc_data = $this->getDocumentData( $doc_id );
 
         return $this->_doc_factory->fromData(
             $doc_data,
@@ -93,6 +108,20 @@ class Client
                 $this->getMetaBucketData( $doc_data )
             )
         );
+    }
+
+
+    /**
+     * Send bucker data to the server for a document
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     */
+    public function sendBucketData( $doc_id, $data )
+    {
+        return $this->_strategy->sendBucketData( $doc_id, $data );
     }
 
 

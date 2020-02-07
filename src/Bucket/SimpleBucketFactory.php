@@ -25,7 +25,6 @@ namespace Lovullo\Liza\Bucket;
 
 /**
  * Create a simple key/value store composed of string vectors
- *
  * Note: Not yet enforcing string vectors...
  */
 class SimpleBucketFactory
@@ -33,6 +32,8 @@ class SimpleBucketFactory
 {
     /**
      * Create bucket from data
+     *
+     * @param array $data
      *
      * @return ImmutableBucket
      */
