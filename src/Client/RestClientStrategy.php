@@ -167,7 +167,7 @@ class RestClientStrategy
      * @param string $endpoint Endpoint for REST service
      * @param array  $data     The data as an array
      *
-     * @return
+     * @return string JSON object
      */
     protected function postData( $base_url, $doc_id, $endpoint, $data )
     {

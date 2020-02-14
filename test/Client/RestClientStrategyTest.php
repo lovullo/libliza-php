@@ -248,5 +248,41 @@ class RestClientStrategyTest
 
         $this->assertArrayHasKey( 'worked', $result );
     }
+
+
+    public function testPostProgramDataRequestsBaseUrlWithIdAndProgData()
+    {
+        global $file_get_contents_url,
+            $file_get_contents_ret;
+
+        $url = 'https://foo/document/';
+        $id  = 'FOO456';
+
+        // no mocking at all now
+        $skey = 'testkey456';
+        $sut  = new Sut( $url, $skey );
+
+        $dummy_data = $this->getDummyData();
+        $dummy_data[ 'worked' ] = 'ok';
+
+        $data = [ 'id' => $id ];
+        $parameters  = [
+            'data'            => $data,
+            'concluding_save' => false
+        ];
+
+        // the test will fail unless this JSON-decodes into an array
+        $file_get_contents_ret = json_encode( $dummy_data );
+
+        // see mock file_get_contents at top of this file
+        $result = $sut->sendBucketData( $id, $parameters );
+
+        $this->assertEquals(
+            $url . $id . '/step/1/post?skey=' . $skey,
+            $file_get_contents_url
+        );
+
+        $this->assertArrayHasKey( 'worked', json_decode($result, true) );
+    }
 }
 }

@@ -34,7 +34,6 @@ class SimpleBucketFactory
      * Create bucket from data
      *
      * @param array $data
-     *
      * @return ImmutableBucket
      */
     public function fromData( array $data )

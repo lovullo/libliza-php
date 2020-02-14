@@ -112,7 +112,7 @@ class Client
 
 
     /**
-     * Send bucker data to the server for a document
+     * Send bucket data to the server for a document
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array

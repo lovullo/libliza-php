@@ -46,4 +46,15 @@ interface ClientStrategy
      * @return array program data
      */
     public function getProgramData( $doc_id );
+
+
+    /**
+     * Send updated bucket data to the server
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     */
+    public function sendBucketData( $doc_id, $data );
 }
