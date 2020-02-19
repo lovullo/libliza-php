@@ -97,6 +97,75 @@ class ClientTest
     }
 
 
+    public function testRetrievesNewBucketFromDocumentData()
+    {
+        $mock_strategy       = $this->createMockStrategy();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+        $doc_request_id      = '0';
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $mock_return = [
+            'id'       => 200007,
+            'content'  => [ "valid" => false ],
+            'hasError' => false
+        ];
+
+        $mock_strategy
+            ->expects( $this->once() )
+            ->method( 'getDocumentData' )
+            ->with( $doc_request_id )
+            ->willReturn( $mock_return );
+
+        $this->assertSame(
+            $mock_return,
+            $sut->getDocumentData( $doc_request_id )
+        );
+    }
+
+
+    public function testSendBucketData()
+    {
+        $mock_strategy       = $this->createMockStrategy();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+        $doc_request_id      = 200007;
+        $bucket_data         = [ 'bucket' => 'data' ];
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $parameters = [
+            'data'            => $bucket_data,
+            'concluding_save' => false
+        ];
+
+        $mock_return = [
+            'quoteId'  => $doc_request_id,
+            'hasError' => false
+        ];
+
+        $mock_strategy
+            ->expects( $this->once() )
+            ->method( 'sendBucketData' )
+            ->with( $doc_request_id, $parameters )
+            ->willReturn(  $mock_return );
+
+        $this->assertSame(
+            $mock_return,
+            $sut->sendBucketData( $doc_request_id, $parameters )
+        );
+    }
+
+
     public function testRetrievesDocumentDataForGivenId()
     {
         $mock_strategy       = $this->createMockStrategy();
