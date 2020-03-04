@@ -24,6 +24,7 @@ namespace Lovullo\Liza\Tests\Client;
 
 use Lovullo\Liza\Dao\MongoDao as Sut;
 use MongoDb;
+use MongoDB\UpdateResult;
 
 class MongoDaoTest
     extends \PHPUnit_Framework_TestCase
@@ -33,6 +34,14 @@ class MongoDaoTest
     protected function createSut( $mongo_client )
     {
         return new Sut( $mongo_client );
+    }
+
+
+    private function _mockMongoResult()
+    {
+        return $this->getMockBuilder( UpdateResult::class )
+            ->setMethods( [ 'getMatchedCount', 'getModifiedCount' ] )
+            ->getMock();
     }
 
 
@@ -87,17 +96,23 @@ class MongoDaoTest
             'content' => $data
         ];
 
+        $update_result = $this->_mockMongoResult();
+        $update_result->expects( $this->once() )
+            ->method( 'getModifiedCount' )
+            ->willReturn( 1 );
+
         $mongo
             ->program
             ->quotes
             ->expects( $this->once() )
             ->method( 'updateOne' )
             ->with(  $query, $bucket  )
-            ->willReturn( $return );
+            ->willReturn( $update_result );
 
         $sut = $this->createSut( $mongo );
         $result = $sut->update( $id, $data );
 
-        $this->assertEquals( $return, $result );
+        $this->assertInstanceOf( UpdateResult::class, $result );
+        $this->assertEquals( 1, $result->getModifiedCount() );
     }
 }

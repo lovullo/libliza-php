@@ -22,7 +22,7 @@
 
 namespace Lovullo\Liza\Dao;
 
-use MongoClient;
+use MongoDb;
 
 class MongoDaoFactory
 {
@@ -35,9 +35,9 @@ class MongoDaoFactory
      */
     public function fromHost( $host )
     {
-        $mongo_client = $this->_getMongoClient( $host );
+        $mongo_connection = $this->_getMongoConnection( $host );
 
-        return new MongoDao( $mongo_client );
+        return new MongoDao( $mongo_connection );
     }
 
 
@@ -54,11 +54,11 @@ class MongoDaoFactory
      *
      * @throws \Exception
      */
-    private function _getMongoClient( $mongo_db, $retry = 50 )
+    private function _getMongoConnection( $mongo_db, $retry = 50 )
     {
         try
         {
-            return new \MongoClient( $mongo_db );
+            return new \MongoDb( $mongo_db );
         }
         catch ( \Exception $e )
         {

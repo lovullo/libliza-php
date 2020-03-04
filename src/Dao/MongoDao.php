@@ -49,7 +49,7 @@ class MongoDao implements Dao
      * @param integer $quote_id Quote ID used for document
      * @param array   $data     Array built for data updates
      *
-     * @return mixed Results of the mongo query call
+     * @return MongoDB\UpdateResult The results of the mongo query call
      */
     public function update(
         $quote_id,
