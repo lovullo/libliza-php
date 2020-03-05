@@ -56,5 +56,5 @@ interface ClientStrategy
      *
      * @return string JSON object
      */
-    public function sendBucketData( $doc_id, $data );
+    public function sendBucketData( $doc_id, array $data );
 }

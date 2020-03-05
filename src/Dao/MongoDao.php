@@ -2,7 +2,7 @@
 /**
  * Liza server dao
  *
- *  Copyright (C) 2016 LoVullo Associates, Inc.
+ *  Copyright (C) 2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -22,7 +22,7 @@
 
 namespace Lovullo\Liza\Dao;
 
-use MongoDb;
+use MongoClient;
 
 class MongoDao implements Dao
 {
@@ -35,11 +35,11 @@ class MongoDao implements Dao
     /**
      * QuoteDao class
      *
-     * @param MongoDb $mongo_host
+     * @param MongoClient $mongo_connection
      */
-    public function __construct( MongoDb $mongo )
+    public function __construct( MongoClient $mongo_connection )
     {
-        $this->_db = $mongo;
+        $this->_db = $mongo_connection;
     }
 
 
@@ -53,14 +53,12 @@ class MongoDao implements Dao
      */
     public function update(
         $quote_id,
-        $data
+        array $data
     )
     {
-        return $this->_db->program->quotes->updateOne(
+        return $this->_db->program->quotes->update(
             [ 'id'   => $quote_id ],
             [ '$set' => $data ]
         );
     }
-
 }
-

@@ -114,7 +114,7 @@ class RestClientStrategy
      *
      * @return string JSON object
      */
-    public function sendBucketData( $doc_id, $data )
+    public function sendBucketData( $doc_id, array $data )
     {
         $doc_id = (string)$doc_id;
 

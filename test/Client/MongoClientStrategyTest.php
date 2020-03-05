@@ -2,7 +2,7 @@
 /**
  * Tests MongoClient strategy
  *
- *  Copyright (C) 2016 Lovullo Associates, Inc.
+ *  Copyright (C) 2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -42,7 +42,7 @@ class MongoClientStrategyTest
     private function _mockQuotes()
     {
         return $this->getMockBuilder( \StdClass::class )
-            ->setMethods( [ 'updateOne' ] )
+            ->setMethods( [ 'update' ] )
             ->getMock();
     }
 
@@ -80,6 +80,7 @@ class MongoClientStrategyTest
     public function testCreateSut()
     {
         $sut = $this->createSut();
+        $this->assertInstanceOf( Sut::class, $sut );
     }
 
 
@@ -174,18 +175,23 @@ class MongoClientStrategyTest
             'name' => 'john'
         ];
 
-        $expected = [
-            'id' => $id,
-            'data' => $data
+        $dao_return = [
+            'ok' => 1,
+            'nModified' => 0,
+            'n' => 0,
+            'err' => null,
+            'errmsg' => null,
+            'updatedExisting' => 1,
         ];
 
         $dao->expects( $this->once() )
             ->method( 'update' )
             ->with( $id, $data )
-            ->willReturn( $expected );
+            ->willReturn( $dao_return );
 
         $actual = $sut->sendBucketData( $id, $data );
+        $actual = json_decode( $actual, true );
 
-        $this->assertEquals( $expected, json_decode( $actual, true ) );
+        $this->assertEquals( 1, $actual[ 'ok' ] );
     }
 }

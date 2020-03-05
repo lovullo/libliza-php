@@ -2,7 +2,7 @@
 /**
  * Tests Liza client
  *
- *  Copyright (C) 2016 LoVullo Associates, Inc.
+ *  Copyright (C) 2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -23,8 +23,7 @@
 namespace Lovullo\Liza\Tests\Client;
 
 use Lovullo\Liza\Dao\MongoDao as Sut;
-use MongoDb;
-use MongoDB\UpdateResult;
+use MongoClient;
 
 class MongoDaoTest
     extends \PHPUnit_Framework_TestCase
@@ -37,18 +36,10 @@ class MongoDaoTest
     }
 
 
-    private function _mockMongoResult()
-    {
-        return $this->getMockBuilder( UpdateResult::class )
-            ->setMethods( [ 'getMatchedCount', 'getModifiedCount' ] )
-            ->getMock();
-    }
-
-
     private function _mockQuotes()
     {
         return $this->getMockBuilder( \StdClass::class )
-            ->setMethods( [ 'updateOne' ] )
+            ->setMethods( [ 'update' ] )
             ->getMock();
     }
 
@@ -64,7 +55,7 @@ class MongoDaoTest
 
     private function _mockMongo( $program = null )
     {
-        $mongo = $this->getMockBuilder( MongoDb::class )
+        $mongo = $this->getMockBuilder( MongoClient::class )
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -91,28 +82,18 @@ class MongoDaoTest
         $query   = [ 'id' => $id ];
         $data    = [ 'name' => 'john' ];
         $bucket  = [ '$set' => $data ];
-        $return  = [
-            'id' => $id,
-            'content' => $data
-        ];
-
-        $update_result = $this->_mockMongoResult();
-        $update_result->expects( $this->once() )
-            ->method( 'getModifiedCount' )
-            ->willReturn( 1 );
 
         $mongo
             ->program
             ->quotes
             ->expects( $this->once() )
-            ->method( 'updateOne' )
+            ->method( 'update' )
             ->with(  $query, $bucket  )
-            ->willReturn( $update_result );
+            ->willReturn( 1 );
 
         $sut = $this->createSut( $mongo );
         $result = $sut->update( $id, $data );
 
-        $this->assertInstanceOf( UpdateResult::class, $result );
-        $this->assertEquals( 1, $result->getModifiedCount() );
+        $this->assertEquals( 1, $result );
     }
 }

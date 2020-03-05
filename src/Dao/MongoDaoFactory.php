@@ -2,7 +2,7 @@
 /**
  * Liza server dao
  *
- *  Copyright (C) 2016 LoVullo Associates, Inc.
+ *  Copyright (C) 2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -22,7 +22,7 @@
 
 namespace Lovullo\Liza\Dao;
 
-use MongoDb;
+use MongoClient;
 
 class MongoDaoFactory
 {
@@ -52,29 +52,27 @@ class MongoDaoFactory
      *
      * @see https://jira.mongodb.org/browse/PHP-854
      *
-     * @throws \Exception
+     * @param string $host The server host URI
+     * @param integer $retry Number of connection retries on failure
+     *
+     * @return MongoClient connection
+     *
+     * @throws \RuntimeException
      */
-    private function _getMongoConnection( $mongo_db, $retry = 50 )
+    private function _getMongoConnection( $host, $retry = 50 )
     {
         try
         {
-            return new \MongoDb( $mongo_db );
+            return new MongoClient( $host );
         }
         catch ( \Exception $e )
         {
-            // Do nothing, we are going to retry the connection
+            if ( $retry > 0 )
+            {
+                return $this->_getMongoConnection( $host, --$retry );
+            }
         }
 
-        if ( $retry > 0 )
-        {
-            return $this->_getMongoClient( $mongo_db, --$retry );
-        }
-
-        throw new \Exception( "Tried to connect to the database 50 times and failed. Database may be offline." );
+        throw new \RuntimeException( "Tried to connect to the database 50 times and failed. Database may be offline." );
     }
 }
-
-
-
-
-
