@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Tests Liza client
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -25,41 +26,40 @@ namespace Lovullo\Liza\Tests\Client;
 use Lovullo\Liza\Dao\MongoDao as Sut;
 use MongoClient;
 
-class MongoDaoTest
-    extends \PHPUnit_Framework_TestCase
+class MongoDaoTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    protected function createSut( $mongo_client )
+    protected function createSut($mongo_client)
     {
-        return new Sut( $mongo_client );
+        return new Sut($mongo_client);
     }
 
 
-    private function _mockQuotes()
+    private function mockQuotes()
     {
-        return $this->getMockBuilder( \StdClass::class )
-            ->setMethods( [ 'update' ] )
+        return $this->getMockBuilder(\StdClass::class)
+            ->setMethods([ 'update' ])
             ->getMock();
     }
 
 
-    private function _mockProgram( $quotes = null )
+    private function mockProgram($quotes = null)
     {
-        $program = $this->getMockBuilder( \StdClass::class )->getMock();
-        $program->quotes = ( !empty( $quotes ) ) ? $quotes : $this->_mockQuotes();
+        $program = $this->getMockBuilder(\StdClass::class)->getMock();
+        $program->quotes = ( !empty($quotes) ) ? $quotes : $this->mockQuotes();
 
         return $program;
     }
 
 
-    private function _mockMongo( $program = null )
+    private function mockMongo($program = null)
     {
-        $mongo = $this->getMockBuilder( MongoClient::class )
+        $mongo = $this->getMockBuilder(MongoClient::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mongo->program = ( !empty( $program ) ) ? $program : $this->_mockProgram();
+        $mongo->program = ( !empty($program) ) ? $program : $this->mockProgram();
 
         return $mongo;
     }
@@ -67,17 +67,17 @@ class MongoDaoTest
 
     public function testCreateSut()
     {
-        $sut = $this->createSut( $this->_mockMongo() );
+        $sut = $this->createSut($this->mockMongo());
 
-        $this->assertInstanceOf( Sut::class, $sut );
+        $this->assertInstanceOf(Sut::class, $sut);
     }
 
 
     public function testItUpdatesARecord()
     {
-        $quotes  = $this->_mockQuotes();
-        $program = $this->_mockProgram( $quotes );
-        $mongo   = $this->_mockMongo( $program );
+        $quotes  = $this->mockQuotes();
+        $program = $this->mockProgram($quotes);
+        $mongo   = $this->mockMongo($program);
         $id      = '12345';
         $query   = [ 'id' => $id ];
         $data    = [ 'name' => 'john' ];
@@ -86,14 +86,14 @@ class MongoDaoTest
         $mongo
             ->program
             ->quotes
-            ->expects( $this->once() )
-            ->method( 'update' )
-            ->with(  $query, $bucket  )
-            ->willReturn( 1 );
+            ->expects($this->once())
+            ->method('update')
+            ->with($query, $bucket)
+            ->willReturn(1);
 
-        $sut = $this->createSut( $mongo );
-        $result = $sut->update( $id, $data );
+        $sut = $this->createSut($mongo);
+        $result = $sut->update($id, $data);
 
-        $this->assertEquals( 1, $result );
+        $this->assertEquals(1, $result);
     }
 }

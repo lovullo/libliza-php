@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Liza server dao
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -23,6 +24,7 @@
 namespace Lovullo\Liza\Dao;
 
 use MongoClient;
+use RuntimeException;
 
 class MongoDaoFactory
 {
@@ -31,13 +33,14 @@ class MongoDaoFactory
      *
      * @param string $domain Domain where script is run from
      *
-     * @return array $pdo_alias Array of db aliases to be used
+     * @return MongoDao
+     * @codeCoverageIgnore constructor
      */
-    public function fromHost( $host )
+    public function fromHost($host)
     {
-        $mongo_connection = $this->_getMongoConnection( $host );
+        $mongo_connection = $this->getMongoConnection($host);
 
-        return new MongoDao( $mongo_connection );
+        return new MongoDao($mongo_connection);
     }
 
 
@@ -58,21 +61,18 @@ class MongoDaoFactory
      * @return MongoClient connection
      *
      * @throws \RuntimeException
+     * @codeCoverageIgnore constructor
      */
-    private function _getMongoConnection( $host, $retry = 50 )
+    private function getMongoConnection($host, $retry = 50)
     {
-        try
-        {
-            return new MongoClient( $host );
-        }
-        catch ( \Exception $e )
-        {
-            if ( $retry > 0 )
-            {
-                return $this->_getMongoConnection( $host, --$retry );
+        try {
+            return new MongoClient($host);
+        } catch (\Exception $e) {
+            if ($retry > 0) {
+                return $this->getMongoConnection($host, --$retry);
             }
         }
 
-        throw new \RuntimeException( "Tried to connect to the database 50 times and failed. Database may be offline." );
+        throw new RuntimeException("Tried to connect to the database multiple times and failed. Database may be offline.");
     }
 }

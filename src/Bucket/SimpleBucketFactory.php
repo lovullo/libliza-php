@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bucket factory
  *
@@ -22,13 +23,11 @@
 
 namespace Lovullo\Liza\Bucket;
 
-
 /**
  * Create a simple key/value store composed of string vectors
  * Note: Not yet enforcing string vectors...
  */
-class SimpleBucketFactory
-    implements BucketFactory
+class SimpleBucketFactory implements BucketFactory
 {
     /**
      * Create bucket from data
@@ -36,8 +35,8 @@ class SimpleBucketFactory
      * @param array $data
      * @return ImmutableBucket
      */
-    public function fromData( array $data )
+    public function fromData(array $data)
     {
-        return new ImmutableBucket( $data );
+        return new ImmutableBucket($data);
     }
 }

@@ -9,6 +9,7 @@ include:
       file: '/jobs-php-static-analysis.yml'
 
 variables:
+    phpcs_standard: "PSR12"
     phpunit_config: "test/"
     phpcs_ignore:   "vendor/,test/"
     phpmd_ignore:   "vendor/,test/"

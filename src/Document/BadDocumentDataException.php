@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bad document data exception
  *
@@ -20,9 +21,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Lovullo\Liza\Document;
-
 
 /**
  * Invalid or incomplete document data were provided
@@ -31,7 +30,6 @@ namespace Lovullo\Liza\Document;
  * implementation details (and potentially very sensitive data); this is a
  * public-facing exception!
  */
-class BadDocumentDataException
-    extends \Exception
+class BadDocumentDataException extends \Exception
 {
 }

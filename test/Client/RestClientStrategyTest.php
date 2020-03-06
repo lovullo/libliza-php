@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests RESTful client strategy
  *
@@ -25,11 +26,10 @@ namespace
     $file_get_contents_ret = '';
     $file_get_contents_url = '';
 }
-
 // for mocking our REST calls until we have a proper abstraction
 namespace Lovullo\Liza\Client
 {
-    function file_get_contents( $url )
+    function file_get_contents($url)
     {
         global $file_get_contents_url,
             $file_get_contents_ret;
@@ -38,251 +38,259 @@ namespace Lovullo\Liza\Client
         return $file_get_contents_ret;
     }
 }
-
-
 namespace Lovullo\Liza\Tests\Client
 {
 
-use Lovullo\Liza\Client\RestClientStrategy as Sut;
+    use Lovullo\Liza\Client\RestClientStrategy as Sut;
 
 
-class RestClientStrategyTest
-    extends ClientStrategyTestCase
-{
-    protected function createSut()
+    class RestClientStrategyTest extends ClientStrategyTestCase
     {
-        $sut = $this->createPlainSut( 'https://base', 'foo' );
+        protected function createSut()
+        {
+            $sut = $this->createPlainSut('https://base', 'foo');
 
-        // valid data for test case supertype
-        $sut->method( 'queryDocument' )
-            ->willReturn( $this->getDummyData() );
+            // valid data for test case supertype
+            $sut->method('queryDocument')
+            ->willReturn($this->getDummyData());
 
-        return $sut;
-    }
+            return $sut;
+        }
 
 
-    /**
-     * Create SUT without setting up default mocks
-     */
-    protected function createPlainSut( $base_url, $skey = 'fookey' )
-    {
-        return $this->getMockBuilder(
-            'Lovullo\Liza\Client\RestClientStrategy'
-        )
-            ->setConstructorArgs( array( $base_url, $skey ) )
-            ->setMethods( array( 'queryDocument' ) )
+        /**
+         * Create SUT without setting up default mocks
+         */
+        protected function createPlainSut($base_url, $skey = 'fookey')
+        {
+            return $this->getMockBuilder(
+                'Lovullo\Liza\Client\RestClientStrategy'
+            )
+            ->setConstructorArgs(array( $base_url, $skey ))
+            ->setMethods(array( 'queryDocument' ))
             ->getMock();
-    }
+        }
 
 
-    /**
-     * Just enough data to be acceptable
-     */
-    protected function getDummyData()
-    {
-        return array(
+        /**
+         * Just enough data to be acceptable
+         */
+        protected function getDummyData()
+        {
+            return array(
             'id'   => 0,
             'data' => array(),
-        );
-    }
+            );
+        }
 
 
-    public function testQueryMethodIsGivenProperBaseUrl()
-    {
-        $url = 'https://foo.bar/baz/';
-        $sut = $this->createPlainSut( $url );
+        public function testQueryMethodIsGivenProperBaseUrl()
+        {
+            $url = 'https://foo.bar/baz/';
+            $sut = $this->createPlainSut($url);
 
-        $sut->expects( $this->once() )
-            ->method( 'queryDocument' )
-            ->with( $url, $this->anything(), 'init' )
-            ->willReturn( $this->getDummyData() );
+            $sut->expects($this->once())
+            ->method('queryDocument')
+            ->with($url, $this->anything(), 'init')
+            ->willReturn($this->getDummyData());
 
-        $sut->getDocumentData( 0 );
-    }
-
-
-    public function testGetProgramDataIsGivenProperBaseUrl()
-    {
-        $url = 'https://bar.foo/test/';
-        $sut = $this->createPlainSut( $url );
-
-        $sut->expects( $this->once() )
-            ->method( 'queryDocument' )
-            ->with( $url, $this->anything(), 'progdata' )
-            ->willReturn( $this->getDummyData() );
-
-        $sut->getProgramData( 0 );
-    }
+            $sut->getDocumentData(0);
+        }
 
 
-    public function testQueryMethodIsGivenProperDocId()
-    {
-        $sut = $this->createPlainSut( 'base' );
-        $id  = 'FOOBAR';
+        public function testGetProgramDataIsGivenProperBaseUrl()
+        {
+            $url = 'https://bar.foo/test/';
+            $sut = $this->createPlainSut($url);
 
-        $sut->expects( $this->once() )
-            ->method( 'queryDocument' )
-            ->with( $this->anything(), $id, 'init' )
-            ->willReturn( $this->getDummyData() );
+            $sut->expects($this->once())
+            ->method('queryDocument')
+            ->with($url, $this->anything(), 'progdata')
+            ->willReturn($this->getDummyData());
 
-        $sut->getDocumentData( $id );
-    }
-
-
-    /**
-     * @depends testQueryMethodIsGivenProperDocId
-     */
-    public function testMapsQuoteIdFieldToGenericId()
-    {
-        $sut = $this->createPlainSut( 'base' );
-        $id  = 'ABCFOO';
-
-        $dummy_data = $this->getDummyData();
-
-        $dummy_data[ 'quoteId' ] = $id;
-        unset( $dummy_data[ 'id' ] );
-
-        $sut->method( 'queryDocument' )
-            ->willReturn( $dummy_data );
-
-        // make sure it doesn't just use the id we provided, rather than the
-        // id in the response
-        $given = $sut->getDocumentData( 'nonsenseidfortesting' );
-
-        $this->assertEquals( $id, $given[ 'id' ] );
-        $this->assertArrayNotHasKey( 'quoteId', $given );
-    }
+            $sut->getProgramData(0);
+        }
 
 
-    /**
-     * @expectedException Lovullo\Liza\Client\BadClientDataException
-     */
-    public function testFailsWhenNeitherQuoteNorDocumentIdAvailable()
-    {
-        $sut = $this->createPlainSut( 'base' );
+        public function testQueryMethodIsGivenProperDocId()
+        {
+            $sut = $this->createPlainSut('base');
+            $id  = 'FOOBAR';
 
-        $dummy_data = $this->getDummyData();
-        unset( $dummy_data[ 'id' ], $dummy_data[ 'quoteId' ] );
+            $sut->expects($this->once())
+            ->method('queryDocument')
+            ->with($this->anything(), $id, 'init')
+            ->willReturn($this->getDummyData());
 
-        $sut->method( 'queryDocument' )
-            ->willReturn( $dummy_data );
-
-        $given = $sut->getDocumentData( 0 );
-    }
+            $sut->getDocumentData($id);
+        }
 
 
-    public function testReturnsAllDocumentData()
-    {
-        $sut        = $this->createPlainSut( 'base' );
-        $dummy_data = $this->getDummyData();
+        /**
+         * @depends testQueryMethodIsGivenProperDocId
+         */
+        public function testMapsQuoteIdFieldToGenericId()
+        {
+            $sut = $this->createPlainSut('base');
+            $id  = 'ABCFOO';
 
-        // key that is not likely to exist
-        $expected            = 'mooooo';
-        $dummy_data[ 'cow' ] = $expected;
+            $dummy_data = $this->getDummyData();
 
-        $sut->method( 'queryDocument' )
-            ->willReturn( $dummy_data );
+            $dummy_data[ 'quoteId' ] = $id;
+            unset($dummy_data[ 'id' ]);
 
-        $this->assertEquals(
-            $dummy_data,
-            $sut->getDocumentData( 0 )
-        );
-    }
+            $sut->method('queryDocument')
+            ->willReturn($dummy_data);
+
+            // make sure it doesn't just use the id we provided, rather than the
+            // id in the response
+            $given = $sut->getDocumentData('nonsenseidfortesting');
+
+            $this->assertEquals($id, $given[ 'id' ]);
+            $this->assertArrayNotHasKey('quoteId', $given);
+        }
 
 
-    public function testDocumentRequestsBaseUrlWithIdAndInit()
-    {
-        global $file_get_contents_url,
+        /**
+         * @expectedException Lovullo\Liza\Client\BadClientDataException
+         */
+        public function testFailsWhenNeitherQuoteNorDocumentIdAvailable()
+        {
+            $sut = $this->createPlainSut('base');
+
+            $dummy_data = $this->getDummyData();
+            unset($dummy_data[ 'id' ], $dummy_data[ 'quoteId' ]);
+
+            $sut->method('queryDocument')
+            ->willReturn($dummy_data);
+
+            $given = $sut->getDocumentData(0);
+        }
+
+
+        public function testReturnsAllDocumentData()
+        {
+            $sut        = $this->createPlainSut('base');
+            $dummy_data = $this->getDummyData();
+
+            // key that is not likely to exist
+            $expected            = 'mooooo';
+            $dummy_data[ 'cow' ] = $expected;
+
+            $sut->method('queryDocument')
+            ->willReturn($dummy_data);
+
+            $this->assertEquals(
+                $dummy_data,
+                $sut->getDocumentData(0)
+            );
+        }
+
+
+        public function testDocumentRequestsBaseUrlWithIdAndInit()
+        {
+            global $file_get_contents_url,
             $file_get_contents_ret;
 
-        $url = 'https://foo/document/';
-        $id  = 'FOO123';
+            $url = 'https://foo/document/';
+            $id  = 'FOO123';
 
-        // no mocking at all now
-        $skey = 'testfookey123';
-        $sut  = new Sut( $url, $skey );
+            // no mocking at all now
+            $skey = 'testfookey123';
+            $sut  = new Sut($url, $skey);
 
-        $dummy_data = $this->getDummyData();
-        $dummy_data[ 'worked' ] = 'ok';
+            $dummy_data = $this->getDummyData();
+            $dummy_data[ 'worked' ] = 'ok';
 
-        // the test will fail unless this JSON-decodes into an array
-        $file_get_contents_ret = json_encode( $dummy_data );
+            // the test will fail unless this JSON-decodes into an array
+            $file_get_contents_ret = json_encode($dummy_data);
 
-        // see mock file_get_contents at top of this file
-        $result = $sut->getDocumentData( $id );
+            // see mock file_get_contents at top of this file
+            $result = $sut->getDocumentData($id);
 
-        $this->assertEquals(
-            $url . $id . '/init?skey=' . $skey,
-            $file_get_contents_url
-        );
+            $this->assertEquals(
+                $url . $id . '/init?skey=' . $skey,
+                $file_get_contents_url
+            );
 
-        $this->assertArrayHasKey( 'worked', $result );
-    }
+            $this->assertArrayHasKey('worked', $result);
+        }
 
 
-    public function testGetProgramDataRequestsBaseUrlWithIdAndProgData()
-    {
-        global $file_get_contents_url,
+        public function testGetProgramDataRequestsBaseUrlWithIdAndProgData()
+        {
+            global $file_get_contents_url,
             $file_get_contents_ret;
 
-        $url = 'https://foo/document/';
-        $id  = 'FOO456';
+            $url = 'https://foo/document/';
+            $id  = 'FOO456';
 
-        // no mocking at all now
-        $skey = 'testkey456';
-        $sut  = new Sut( $url, $skey );
+            // no mocking at all now
+            $skey = 'testkey456';
+            $sut  = new Sut($url, $skey);
 
-        $dummy_data = $this->getDummyData();
-        $dummy_data[ 'worked' ] = 'ok';
+            $dummy_data = $this->getDummyData();
+            $dummy_data[ 'worked' ] = 'ok';
 
-        // the test will fail unless this JSON-decodes into an array
-        $file_get_contents_ret = json_encode( $dummy_data );
+            // the test will fail unless this JSON-decodes into an array
+            $file_get_contents_ret = json_encode($dummy_data);
 
-        // see mock file_get_contents at top of this file
-        $result = $sut->getProgramData( $id );
+            // see mock file_get_contents at top of this file
+            $result = $sut->getProgramData($id);
 
-        $this->assertEquals(
-            $url . $id . '/progdata?skey=' . $skey,
-            $file_get_contents_url
-        );
+            $this->assertEquals(
+                $url . $id . '/progdata?skey=' . $skey,
+                $file_get_contents_url
+            );
 
-        $this->assertArrayHasKey( 'worked', $result );
-    }
+            $this->assertArrayHasKey('worked', $result);
+        }
 
 
-    public function testPostProgramDataRequestsBaseUrlWithIdAndProgData()
-    {
-        global $file_get_contents_url,
+        public function testPostProgramDataRequestsBaseUrlWithIdAndProgData()
+        {
+            global $file_get_contents_url,
             $file_get_contents_ret;
 
-        $url = 'https://foo/document/';
-        $id  = 'FOO456';
+            $url = 'https://foo/document/';
+            $id  = 'FOO456';
 
-        // no mocking at all now
-        $skey = 'testkey456';
-        $sut  = new Sut( $url, $skey );
+            // no mocking at all now
+            $skey = 'testkey456';
+            $sut  = new Sut($url, $skey);
 
-        $dummy_data = $this->getDummyData();
-        $dummy_data[ 'worked' ] = 'ok';
+            $dummy_data = $this->getDummyData();
+            $dummy_data[ 'worked' ] = 'ok';
 
-        $data = [ 'id' => $id ];
-        $parameters  = [
+            $data = [ 'id' => $id ];
+            $parameters  = [
             'data'            => $data,
             'concluding_save' => false
-        ];
+            ];
 
-        // the test will fail unless this JSON-decodes into an array
-        $file_get_contents_ret = json_encode( $dummy_data );
+            // the test will fail unless this JSON-decodes into an array
+            $file_get_contents_ret = json_encode($dummy_data);
 
-        // see mock file_get_contents at top of this file
-        $result = $sut->sendBucketData( $id, $parameters );
+            // see mock file_get_contents at top of this file
+            $result = $sut->setDocumentData($id, $parameters);
 
-        $this->assertEquals(
-            $url . $id . '/step/1/post?skey=' . $skey,
-            $file_get_contents_url
-        );
+            $this->assertEquals(
+                $url . $id . '/step/1/post?skey=' . $skey,
+                $file_get_contents_url
+            );
 
-        $this->assertArrayHasKey( 'worked', json_decode($result, true) );
+            $this->assertArrayHasKey('worked', json_decode($result, true));
+        }
+
+
+        /**
+        * Overrides unneeded parent test
+        *
+        * @expectedException Lovullo\Liza\Client\NotImplementedException
+        */
+        public function testSetDocumentOwnerNameNotImplemented()
+        {
+            $this->createSut()->setDocumentOwnerName(0, []);
+        }
     }
-}
 }

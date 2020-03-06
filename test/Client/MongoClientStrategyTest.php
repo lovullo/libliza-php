@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Tests MongoClient strategy
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -25,54 +26,53 @@ namespace Lovullo\Liza\Tests\Client;
 use Lovullo\Liza\Client\MongoClientStrategy as Sut;
 use Lovullo\Liza\Dao\Dao;
 
-class MongoClientStrategyTest
-    extends ClientStrategyTestCase
+class MongoClientStrategyTest extends ClientStrategyTestCase
 {
 
 
     protected function createSut()
     {
-        $mongo = $this->_mockMongo();
-        $dao = $this->_mockDao( $mongo );
+        $mongo = $this->mockMongo();
+        $dao = $this->mockDao($mongo);
 
-        return new Sut( $dao );
+        return new Sut($dao);
     }
 
 
-    private function _mockQuotes()
+    private function mockQuotes()
     {
-        return $this->getMockBuilder( \StdClass::class )
-            ->setMethods( [ 'update' ] )
+        return $this->getMockBuilder(\StdClass::class)
+            ->setMethods([ 'update' ])
             ->getMock();
     }
 
 
-    private function _mockProgram( $quotes = null )
+    private function mockProgram($quotes = null)
     {
-        $program = $this->getMockBuilder( \StdClass::class )->getMock();
-        $program->quotes = ( !empty( $quotes ) ) ? $quotes : $this->_mockQuotes();
+        $program = $this->getMockBuilder(\StdClass::class)->getMock();
+        $program->quotes = ( !empty($quotes) ) ? $quotes : $this->mockQuotes();
 
         return $program;
     }
 
 
-    private function _mockMongo( $program = null )
+    private function mockMongo($program = null)
     {
-        $mongo = $this->getMockBuilder( \MongoDb::class )
+        $mongo = $this->getMockBuilder(\MongoDb::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mongo->program = ( !empty( $program ) ) ? $program : $this->_mockProgram();
+        $mongo->program = ( !empty($program) ) ? $program : $this->mockProgram();
 
         return $mongo;
     }
 
 
-    private function _mockDao( $mongo )
+    private function mockDao($mongo)
     {
-        return $this->getMockBuilder( Dao::class )
-            ->setConstructorArgs( [ $mongo ] )
-            ->setMethods( [ 'update' ] )
+        return $this->getMockBuilder(Dao::class)
+            ->setConstructorArgs([ $mongo ])
+            ->setMethods([ 'update' ])
             ->getMock();
     }
 
@@ -80,7 +80,7 @@ class MongoClientStrategyTest
     public function testCreateSut()
     {
         $sut = $this->createSut();
-        $this->assertInstanceOf( Sut::class, $sut );
+        $this->assertInstanceOf(Sut::class, $sut);
     }
 
 
@@ -103,7 +103,7 @@ class MongoClientStrategyTest
      */
     public function testGetDocumentDataReturnsAnArray()
     {
-        $this->createSut()->getDocumentData( 0 );
+        $this->createSut()->getDocumentData(0);
     }
 
 
@@ -114,7 +114,7 @@ class MongoClientStrategyTest
      */
     public function testGetDocumentDataContainsDocumentId()
     {
-        $this->createSut()->getDocumentData( 0 );
+        $this->createSut()->getDocumentData(0);
     }
 
 
@@ -125,7 +125,7 @@ class MongoClientStrategyTest
      */
     public function testGetDocumentDataContainsKeyValueStoreData()
     {
-        $this->createSut()->getDocumentData( 0 );
+        $this->createSut()->getDocumentData(0);
     }
 
 
@@ -136,7 +136,7 @@ class MongoClientStrategyTest
      */
     public function testGetProgramDataReturnsAnArray()
     {
-        $this->createSut()->getProgramData( 0 );
+        $this->createSut()->getProgramData(0);
     }
 
 
@@ -147,7 +147,7 @@ class MongoClientStrategyTest
      */
     public function testGetProgramDataContainsDocumentId()
     {
-        $this->createSut()->getProgramData( 0 );
+        $this->createSut()->getProgramData(0);
     }
 
 
@@ -158,21 +158,33 @@ class MongoClientStrategyTest
      */
     public function testGetProgramDataContainsKeyValueStoreData()
     {
-        $this->createSut()->getProgramData( 0 );
+        $this->createSut()->getProgramData(0);
     }
 
 
-    public function testItSendsDataToBucket()
+    /**
+     * Overrides unneeded parent test
+     *
+     * @expectedException Lovullo\Liza\Client\NotImplementedException
+     */
+    public function testSetDocumentDataNotImplemented()
     {
-        $quote   = $this->_mockQuotes();
-        $program = $this->_mockProgram( $quote );
-        $mongo   = $this->_mockMongo( $program );
-        $dao     = $this->_mockDao( $mongo );
-        $sut     = new Sut( $dao );
+        $this->createSut()->setDocumentData(0, []);
+    }
+
+
+    public function testItUpdatesTheOwnerName()
+    {
+        $quote   = $this->mockQuotes();
+        $program = $this->mockProgram($quote);
+        $mongo   = $this->mockMongo($program);
+        $dao     = $this->mockDao($mongo);
+        $sut     = new Sut($dao);
 
         $id = '12345';
+        $agentName = 'john';
         $data = [
-            'name' => 'john'
+            'agentName' => $agentName
         ];
 
         $dao_return = [
@@ -184,14 +196,14 @@ class MongoClientStrategyTest
             'updatedExisting' => 1,
         ];
 
-        $dao->expects( $this->once() )
-            ->method( 'update' )
-            ->with( $id, $data )
-            ->willReturn( $dao_return );
+        $dao->expects($this->once())
+            ->method('update')
+            ->with($id, $data)
+            ->willReturn($dao_return);
 
-        $actual = $sut->sendBucketData( $id, $data );
-        $actual = json_decode( $actual, true );
+        $actual = $sut->setDocumentOwnerName($id, $agentName);
+        $actual = json_decode($actual, true);
 
-        $this->assertEquals( 1, $actual[ 'ok' ] );
+        $this->assertEquals(1, $actual[ 'ok' ]);
     }
 }

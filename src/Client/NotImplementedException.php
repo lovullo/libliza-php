@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Not Implemented mothod exception
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -22,7 +23,6 @@
 
 namespace Lovullo\Liza\Client;
 
-
 /**
  * When a method is called has not been implemented yet
  *
@@ -30,7 +30,6 @@ namespace Lovullo\Liza\Client;
  * implementation details (and potentially very sensitive data); this is a
  * public-facing exception!
  */
-class NotImplementedException
-    extends \BadMethodCallException
+class NotImplementedException extends \BadMethodCallException
 {
 }

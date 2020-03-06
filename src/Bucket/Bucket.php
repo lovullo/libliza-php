@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generalized key/value store
  *
@@ -21,7 +22,6 @@
  */
 
 namespace Lovullo\Liza\Bucket;
-
 
 /**
  * Generalized key/value store
@@ -47,7 +47,7 @@ interface Bucket
      *
      * @throws \DomainException if requested index does not exist
      */
-    public function getDataByName( $name, $index = null );
+    public function getDataByName($name, $index = null);
 
 
     /**
@@ -59,7 +59,7 @@ interface Bucket
      *
      * @throws \DomainException if requested index does not exist
      */
-    public function getDataByRegEx( $regex );
+    public function getDataByRegEx($regex);
 
 
     /**
@@ -70,5 +70,5 @@ interface Bucket
      *
      * @return bool whether the requested key/index exists
      */
-    public function hasData( $name, $index = null );
+    public function hasData($name, $index = null);
 }

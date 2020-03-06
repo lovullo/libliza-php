@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Test case for client data retrieval strategies
  *
@@ -20,16 +21,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Lovullo\Liza\Tests\Client;
 
 use Lovullo\Liza\Client\ClientStrategy as Sut;
 
-
-abstract class ClientStrategyTestCase
-    extends \PHPUnit_Framework_TestCase
+abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
 {
-    protected abstract function createSut();
+    abstract protected function createSut();
 
 
     public function testSutIsAClientStrategy()
@@ -44,7 +42,7 @@ abstract class ClientStrategyTestCase
     public function testGetDocumentDataReturnsAnArray()
     {
         $this->assertTrue(
-            is_array( $this->createSut()->getDocumentData( 0 ) )
+            is_array($this->createSut()->getDocumentData(0))
         );
     }
 
@@ -57,9 +55,9 @@ abstract class ClientStrategyTestCase
      */
     public function testGetDocumentDataContainsDocumentId()
     {
-        $given = $this->createSut()->getDocumentData( 0 );
+        $given = $this->createSut()->getDocumentData(0);
 
-        $this->assertArrayHasKey( 'id', $given );
+        $this->assertArrayHasKey('id', $given);
     }
 
 
@@ -68,17 +66,17 @@ abstract class ClientStrategyTestCase
      */
     public function testGetDocumentDataContainsKeyValueStoreData()
     {
-        $given = $this->createSut()->getDocumentData( 0 );
+        $given = $this->createSut()->getDocumentData(0);
 
-        $this->assertArrayHasKey( 'data', $given );
-        $this->assertTrue( is_array( $given ) );
+        $this->assertArrayHasKey('data', $given);
+        $this->assertTrue(is_array($given));
     }
 
 
     public function testGetProgramDataReturnsAnArray()
     {
         $this->assertTrue(
-            is_array( $this->createSut()->getProgramData( 0 ) )
+            is_array($this->createSut()->getProgramData(0))
         );
     }
 
@@ -91,9 +89,9 @@ abstract class ClientStrategyTestCase
      */
     public function testGetProgramDataContainsDocumentId()
     {
-        $given = $this->createSut()->getProgramData( 0 );
+        $given = $this->createSut()->getProgramData(0);
 
-        $this->assertArrayHasKey( 'id', $given );
+        $this->assertArrayHasKey('id', $given);
     }
 
 
@@ -102,9 +100,9 @@ abstract class ClientStrategyTestCase
      */
     public function testGetProgramDataContainsKeyValueStoreData()
     {
-        $given = $this->createSut()->getProgramData( 0 );
+        $given = $this->createSut()->getProgramData(0);
 
-        $this->assertArrayHasKey( 'data', $given );
-        $this->assertTrue( is_array( $given ) );
+        $this->assertArrayHasKey('data', $given);
+        $this->assertTrue(is_array($given));
     }
 }

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Liza server dao
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -37,7 +38,7 @@ class MongoDao implements Dao
      *
      * @param MongoClient $mongo_connection
      */
-    public function __construct( MongoClient $mongo_connection )
+    public function __construct(MongoClient $mongo_connection)
     {
         $this->_db = $mongo_connection;
     }
@@ -49,16 +50,16 @@ class MongoDao implements Dao
      * @param integer $quote_id Quote ID used for document
      * @param array   $data     Array built for data updates
      *
-     * @return MongoDB\UpdateResult The results of the mongo query call
+     * @return array MongoClient's result array for the mongo query call
      */
     public function update(
         $quote_id,
         array $data
-    )
-    {
+    ) {
         return $this->_db->program->quotes->update(
-            [ 'id'   => $quote_id ],
-            [ '$set' => $data ]
+            [ 'id'     => $quote_id ],
+            [ '$set'   => $data ],
+            [ 'upsert' => true ]
         );
     }
 }

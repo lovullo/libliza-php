@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generic document factory test
  *
@@ -24,16 +25,14 @@ namespace Lovullo\Liza\Tests\Document;
 
 use Lovullo\Liza\Document\DocumentFactory as Sut;
 
-
-class DocumentFactoryTest
-    extends \PHPUnit_Framework_TestCase
+class DocumentFactoryTest extends \PHPUnit_Framework_TestCase
 {
     protected function createSut()
     {
         return $this->getMockBuilder(
             'Lovullo\Liza\Document\DocumentFactory'
         )
-            ->setMethods( [ 'createDocument' ] )
+            ->setMethods([ 'createDocument' ])
             ->getMock();
     }
 
@@ -58,14 +57,14 @@ class DocumentFactoryTest
         $data        = [ 'id' => $doc_id, 'content' => $meta ];
 
         $sut
-            ->expects( $this->once() )
-            ->method( 'createDocument' )
-            ->with( $doc_id, $bucket, $meta_bucket, $meta )
-            ->willReturn( $obj );
+            ->expects($this->once())
+            ->method('createDocument')
+            ->with($doc_id, $bucket, $meta_bucket, $meta)
+            ->willReturn($obj);
 
         $this->assertSame(
             $obj,
-            $sut->fromData( $data, $bucket, $meta_bucket )
+            $sut->fromData($data, $bucket, $meta_bucket)
         );
     }
 
@@ -79,6 +78,19 @@ class DocumentFactoryTest
         $bucket      = $this->createDummyBucket();
         $meta_bucket = $this->createDummyBucket();
 
-        $sut->fromData( [], $bucket, $meta_bucket );
+        $sut->fromData([], $bucket, $meta_bucket);
+    }
+
+
+    /**
+     * @expectedException Lovullo\Liza\Document\BadDocumentDataException
+     */
+    public function testFailsIfNoContentAvailableInData()
+    {
+        $sut         = $this->createSut();
+        $bucket      = $this->createDummyBucket();
+        $meta_bucket = $this->createDummyBucket();
+
+        $sut->fromData([ 'id' => '1' ], $bucket, $meta_bucket);
     }
 }

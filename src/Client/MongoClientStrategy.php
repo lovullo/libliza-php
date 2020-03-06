@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Liza server client strategy
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -23,9 +24,9 @@
 namespace Lovullo\Liza\Client;
 
 use Lovullo\Liza\Dao\Dao;
+use Lovullo\Liza\Client\NotImplementedException;
 
-class MongoClientStrategy
-    implements ClientStrategy
+class MongoClientStrategy implements ClientStrategy
 {
     /**
      * Data Access Object
@@ -40,7 +41,7 @@ class MongoClientStrategy
      *
      * @param Dao $dao
      */
-    public function __construct( Dao $dao )
+    public function __construct(Dao $dao)
     {
         $this->_dao = $dao;
     }
@@ -54,9 +55,9 @@ class MongoClientStrategy
      * @return array document data
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function getDocumentData( $doc_id )
+    public function getDocumentData($doc_id)
     {
-        throw new \Lovullo\Liza\Client\NotImplementedException( 'This method has not been implemented' );
+        throw new NotImplementedException('This method has not been implemented');
     }
 
 
@@ -68,22 +69,37 @@ class MongoClientStrategy
      * @return array program data
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function getProgramData( $doc_id )
+    public function getProgramData($doc_id)
     {
-        throw new \Lovullo\Liza\Client\NotImplementedException( 'This method has not been implemented' );
+        throw new NotImplementedException('This method has not been implemented');
     }
 
 
     /**
-     * Send updated bucket data to the server
+     * Set updated bucket data
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     * @throws \Lovullo\Liza\Client\NotImplementedException
+     */
+    public function setDocumentData($doc_id, array $data)
+    {
+        throw new NotImplementedException('This method has not been implemented');
+    }
+
+
+    /**
+     * Update the agentName field on a document
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array
      *
      * @return string JSON object
      */
-    public function sendBucketData( $doc_id, array $data )
+    public function setDocumentOwnerName($doc_id, $owner_name)
     {
-        return json_encode( $this->_dao->update( $doc_id, $data ) );
+        return json_encode($this->_dao->update($doc_id, ['agentName' => $owner_name]));
     }
 }

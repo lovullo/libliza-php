@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Client data retrieval
  *
@@ -22,7 +23,6 @@
 
 namespace Lovullo\Liza\Client;
 
-
 /**
  * Strategy for retrieving data from the server
  */
@@ -35,7 +35,7 @@ interface ClientStrategy
      *
      * @return array document data
      */
-    public function getDocumentData( $doc_id );
+    public function getDocumentData($doc_id);
 
 
     /**
@@ -45,7 +45,7 @@ interface ClientStrategy
      *
      * @return array program data
      */
-    public function getProgramData( $doc_id );
+    public function getProgramData($doc_id);
 
 
     /**
@@ -56,5 +56,5 @@ interface ClientStrategy
      *
      * @return string JSON object
      */
-    public function sendBucketData( $doc_id, array $data );
+    public function setDocumentData($doc_id, array $data);
 }

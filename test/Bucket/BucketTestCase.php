@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generalized key/value store
  *
@@ -24,9 +25,7 @@ namespace Lovullo\Liza\Tests\Bucket;
 
 use Lovullo\Liza\Bucket\Bucket;
 
-
-abstract class BucketTestCase
-    extends \PHPUnit_Framework_TestCase
+abstract class BucketTestCase extends \PHPUnit_Framework_TestCase
 {
     private $_initialData = array(
         '_foo'    => array( 'foo', 'bar', 'baz' ),
@@ -45,7 +44,7 @@ abstract class BucketTestCase
      *
      * @return Bucket
      */
-    abstract protected function getSut( $initial_data );
+    abstract protected function getSut($initial_data);
 
 
     /**
@@ -53,7 +52,8 @@ abstract class BucketTestCase
      */
     public function testIsABucket()
     {
-        $this->assertTrue( $this->getSut( array() ) instanceof Bucket,
+        $this->assertTrue(
+            $this->getSut(array()) instanceof Bucket,
             'Does not implement interface Bucket'
         );
     }
@@ -69,7 +69,7 @@ abstract class BucketTestCase
 
         $this->assertEquals(
             $this->_initialData[ $key ],
-            $this->getSut( $this->_initialData )->getDataByName( $key ),
+            $this->getSut($this->_initialData)->getDataByName($key),
             'Bucket should return the value identified by a given name'
         );
     }
@@ -82,7 +82,7 @@ abstract class BucketTestCase
     public function testGetDataByRegEx()
     {
         $key = '_foo';
-        $result = $this->getSut( $this->_initialData )->getDataByRegEx( '/'. $key .'/' );
+        $result = $this->getSut($this->_initialData)->getDataByRegEx('/' . $key . '/');
         $this->assertEquals(
             $this->_initialData[ $key ],
             $result[ $key ],
@@ -98,13 +98,13 @@ abstract class BucketTestCase
      */
     public function testCanRetrieveDataByNameAndIndex()
     {
-        $sut   = $this->getSut( $this->_initialData );
+        $sut   = $this->getSut($this->_initialData);
         $key   = '_foo';
         $index = 2;
 
         $this->assertEquals(
             $this->_initialData[ $key ][ $index ],
-            $sut->getDataByName( $key, $index ),
+            $sut->getDataByName($key, $index),
             'Bucket should return the value identified by a name and index'
         );
     }
@@ -120,11 +120,11 @@ abstract class BucketTestCase
      */
     public function testRetrievingNonexistantDataByNameYieldsEmptyArray()
     {
-        $sut = $this->getSut( $this->_initialData );
+        $sut = $this->getSut($this->_initialData);
 
         $this->assertEquals(
             array(),
-            $sut->getDataByName( '_surelythiskeydoesnotexist' ),
+            $sut->getDataByName('_surelythiskeydoesnotexist'),
             'getDataByName() should yield an empty array if data is unset'
         );
     }
@@ -146,10 +146,11 @@ abstract class BucketTestCase
     /**
      * @dataProvider hasDataProvider
      */
-    public function testCanCheckIfKeyExists( $name, $_, $expected )
+    public function testCanCheckIfKeyExists($name, $_, $expected)
     {
-        $this->assertEquals( $expected,
-            $this->getSut( $this->_initialData )->hasData( $name )
+        $this->assertEquals(
+            $expected,
+            $this->getSut($this->_initialData)->hasData($name)
         );
     }
 
@@ -158,10 +159,11 @@ abstract class BucketTestCase
      * @dataProvider hasDataProvider
      * @depends testCanCheckIfKeyExists
      */
-    public function testCanCheckIfIndexExists( $name, $index, $_, $expected )
+    public function testCanCheckIfIndexExists($name, $index, $_, $expected)
     {
-        $this->assertEquals( $expected,
-            $this->getSut( $this->_initialData )->hasData( $name, $index )
+        $this->assertEquals(
+            $expected,
+            $this->getSut($this->_initialData)->hasData($name, $index)
         );
     }
 
@@ -171,8 +173,8 @@ abstract class BucketTestCase
      */
     public function testThrowsErrorIfValueIsNotAnArray()
     {
-        $this->getSut( array( 'foo' => 'nonarray' ) )
-            ->getDataByName( 'foo' );
+        $this->getSut(array( 'foo' => 'nonarray' ))
+            ->getDataByName('foo');
     }
 
 
@@ -201,18 +203,18 @@ abstract class BucketTestCase
      * @dataProvider valueLengthProviderProvider
      */
     public function testWillThrowErrorIfRequestedIndexDoesNotExist(
-        $data, $index, $succeed
-    )
-    {
+        $data,
+        $index,
+        $succeed
+    ) {
         $key = '_bar';
 
-        if ( $succeed === false )
-        {
-            $this->setExpectedException( 'DomainException' );
+        if ($succeed === false) {
+            $this->setExpectedException('DomainException');
         }
 
         // perform the operation, which may or may not throw an exception
-        $this->getSut( array( $key => $data ) )
-            ->getDataByName( $key, $index );
+        $this->getSut(array( $key => $data ))
+            ->getDataByName($key, $index);
     }
 }

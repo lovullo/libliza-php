@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests bucket string formatter
  *
@@ -22,14 +23,12 @@
 
 namespace Lovullo\Liza\Tests\Bucket\Formatter;
 
-
-abstract class BucketFormatterTestCase
-    extends \PHPUnit_Framework_TestCase
+abstract class BucketFormatterTestCase extends \PHPUnit_Framework_TestCase
 {
     abstract protected function createCaseSut();
 
 
-    public function getMockBucket( array $data = array() )
+    public function getMockBucket(array $data = array())
     {
         $bucket = $this->getMockBuilder(
             'Lovullo\Liza\Bucket\Bucket'
@@ -37,11 +36,10 @@ abstract class BucketFormatterTestCase
             ->getMock();
 
         $bucket
-            ->method( 'getDataByName' )
-            ->willReturnCallback( function( $name, $index ) use ( $data )
-            {
+            ->method('getDataByName')
+            ->willReturnCallback(function ($name, $index) use ($data) {
                 return $data[ $name ][ $index ];
-            } );
+            });
 
         return $bucket;
     }
@@ -62,6 +60,6 @@ abstract class BucketFormatterTestCase
             $this->getMockBucket()
         );
 
-        $this->assertTrue( is_string( $result ) );
+        $this->assertTrue(is_string($result));
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generalized immutable key/value store
  *
@@ -22,7 +23,6 @@
 
 namespace Lovullo\Liza\Bucket;
 
-
 /**
  * Generalized key/value store
  *
@@ -32,8 +32,7 @@ namespace Lovullo\Liza\Bucket;
  *
  * This should closely resemble the bucket implementation in Liza.
  */
-class ImmutableBucket
-    implements Bucket
+class ImmutableBucket implements Bucket
 {
     /**
      * Bucket data
@@ -55,7 +54,7 @@ class ImmutableBucket
      *
      * @param array $data bucket data
      */
-    public function __construct( array $data )
+    public function __construct(array $data)
     {
         $this->_data = $data;
     }
@@ -68,14 +67,13 @@ class ImmutableBucket
      *
      * @return array values associated with the key
      */
-    public function getDataByRegEx( $regex )
+    public function getDataByRegEx($regex)
     {
         $data      = [];
-        $data_keys = preg_grep( $regex, array_keys( $this->_data ) );
+        $data_keys = preg_grep($regex, array_keys($this->_data));
 
-        foreach ( $data_keys as $key )
-        {
-            $data[ $key ] = $this->getDataByName( $key );
+        foreach ($data_keys as $key) {
+            $data[ $key ] = $this->getDataByName($key);
         }
 
         return $data;
@@ -95,31 +93,31 @@ class ImmutableBucket
      *
      * @throws \DomainException if requested index does not exist
      */
-    public function getDataByName( $name, $index = null )
+    public function getDataByName($name, $index = null)
     {
-        $data = ( isset( $this->_data[ $name ] ) )
+        $data = ( isset($this->_data[ $name ]) )
             ? $this->_data[ $name ]
             : array();
 
         // if the data is not an array, then there is a problem somewhere
-        if ( is_array( $data ) === false )
-        {
+        if (is_array($data) === false) {
             throw new \DomainException(
-                sprintf( 'Data integrity failure: %s', $name )
+                sprintf('Data integrity failure: %s', $name)
             );
         }
 
         // if we have less than the required number of keys, make the probelm
         // very clear
-        if ( ( $index !== null )
-            && ( array_key_exists( $index, $data ) === false ) )
-        {
+        if (
+            ( $index !== null )
+            && ( array_key_exists($index, $data) === false )
+        ) {
             throw new \DomainException(
                 sprintf(
                     'Requested index %d for %s does not exist; have %d values',
                     $index,
                     $name,
-                    count( $data )
+                    count($data)
                 )
             );
         }
@@ -140,17 +138,16 @@ class ImmutableBucket
      *
      * @return bool whether the requested index for the given name exists
      */
-    public function hasData( $name, $index = null )
+    public function hasData($name, $index = null)
     {
-        if ( !array_key_exists( $name, $this->_data ) )
-        {
+        if (!array_key_exists($name, $this->_data)) {
             return false;
         }
 
         $data = $this->_data[ $name ];
 
         return ( $index !== null )
-            ? isset( $data[ $index ] )
+            ? isset($data[ $index ])
             : true;
     }
 }

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Liza server dao
  *
- *  Copyright (C) 2020 Ryan Specialty Group, LLC.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -32,5 +33,5 @@ interface Dao
      *
      * @return mixed Results of the mongo query call
      */
-    public function update( $mongo_quote_id, array $mongo_data );
+    public function update($mongo_quote_id, array $mongo_data);
 }

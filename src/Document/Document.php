@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generic document
  *
@@ -23,7 +24,6 @@
 namespace Lovullo\Liza\Document;
 
 use Lovullo\Liza\Bucket\Bucket;
-
 
 /**
  * Generic document with an associated key/value store
@@ -76,8 +76,7 @@ class Document
         Bucket $bucket,
         Bucket $meta_bucket,
         array $fields = []
-    )
-    {
+    ) {
         $this->_id          = (string)$doc_id;
         $this->_bucket      = $bucket;
         $this->_meta_bucket = $meta_bucket;
@@ -105,12 +104,9 @@ class Document
     {
         // This existed before MissingDocumentFieldException and
         // was expected to not throw an exception when it does not exist.
-        try
-        {
-            return (string)$this->_getFieldByName( "programId" );
-        }
-        catch ( MissingDocumentFieldException $e )
-        {
+        try {
+            return (string)$this->getFieldByName("programId");
+        } catch (MissingDocumentFieldException $e) {
             return "";
         }
     }
@@ -123,7 +119,7 @@ class Document
      */
     public function getAgentId()
     {
-        return $this->_getFieldByName( "agentId" );
+        return $this->getFieldByName("agentId");
     }
 
 
@@ -134,7 +130,7 @@ class Document
      */
     public function getAgentEntityId()
     {
-        return $this->_getFieldByName( "agentEntityId" );
+        return $this->getFieldByName("agentEntityId");
     }
 
 
@@ -145,7 +141,7 @@ class Document
      */
     public function getInitialRatedDate()
     {
-        return $this->_getFieldByName( "initialRatedDate" );
+        return $this->getFieldByName("initialRatedDate");
     }
 
 
@@ -156,7 +152,7 @@ class Document
      */
     public function getLastPremDate()
     {
-        return $this->_getFieldByName( "lastPremDate" );
+        return $this->getFieldByName("lastPremDate");
     }
 
 
@@ -167,7 +163,7 @@ class Document
      */
     public function getStartDate()
     {
-        return $this->_getFieldByName( "startDate" );
+        return $this->getFieldByName("startDate");
     }
 
 
@@ -178,7 +174,7 @@ class Document
      */
     public function getAgentName()
     {
-        return $this->_getFieldByName( "agentName" );
+        return $this->getFieldByName("agentName");
     }
 
 
@@ -211,13 +207,12 @@ class Document
      * @return string field or empty string if unknown
      * @throws MissingDocumentFieldException when the field does not exist
      */
-    private function _getFieldByName( $name )
+    private function getFieldByName($name)
     {
-        if ( array_key_exists( $name, $this->_fields ) )
-        {
+        if (array_key_exists($name, $this->_fields)) {
             return $this->_fields[ $name ];
         }
 
-        throw new MissingDocumentFieldException( "Missing field data" );
+        throw new MissingDocumentFieldException("Missing field data");
     }
 }

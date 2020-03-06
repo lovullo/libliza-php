@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bucket factory
  *
@@ -22,7 +23,6 @@
 
 namespace Lovullo\Liza\Bucket;
 
-
 /**
  * Creates buckets
  */
@@ -33,5 +33,5 @@ interface BucketFactory
      *
      * @return Bucket
      */
-    public function fromData( array $data );
+    public function fromData(array $data);
 }
