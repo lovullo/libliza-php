@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Liza server client
  *
@@ -24,7 +25,6 @@ namespace Lovullo\Liza\Client;
 
 use Lovullo\Liza\Document\DocumentFactory;
 use Lovullo\Liza\Bucket\BucketFactory;
-
 
 /**
  * Liza server client
@@ -60,11 +60,10 @@ class Client
      * @param BucketFactory   $bucket_factory
      */
     public function __construct(
-        ClientStrategy  $strategy,
+        ClientStrategy $strategy,
         DocumentFactory $doc_factory,
-        BucketFactory   $bucket_factory
-    )
-    {
+        BucketFactory $bucket_factory
+    ) {
         $this->_strategy       = $strategy;
         $this->_doc_factory    = $doc_factory;
         $this->_bucket_factory = $bucket_factory;
@@ -80,9 +79,9 @@ class Client
      *
      * @throws BadClientDataException if data are invalid or missing
      */
-    public function getDocumentData( $doc_id )
+    public function getDocumentData($doc_id)
     {
-        return $this->_strategy->getDocumentData( $doc_id );
+        return $this->_strategy->getDocumentData($doc_id);
     }
 
 
@@ -95,33 +94,47 @@ class Client
      *
      * @throws BadClientDataException if data are invalid or missing
      */
-    public function getDocument( $doc_id )
+    public function getDocument($doc_id)
     {
-        $doc_data = $this->getDocumentData( $doc_id );
+        $doc_data = $this->getDocumentData($doc_id);
 
         return $this->_doc_factory->fromData(
             $doc_data,
             $this->_bucket_factory->fromData(
-                $this->getBucketData( $doc_data )
+                $this->getBucketData($doc_data)
             ),
             $this->_bucket_factory->fromData(
-                $this->getMetaBucketData( $doc_data )
+                $this->getMetaBucketData($doc_data)
             )
         );
     }
 
 
     /**
-     * Send bucket data to the server for a document
+     * Set bucket data for a document
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array
      *
      * @return string JSON object
      */
-    public function sendBucketData( $doc_id, $data )
+    public function setDocumentData($doc_id, $data)
     {
-        return $this->_strategy->sendBucketData( $doc_id, $data );
+        return $this->_strategy->setDocumentData($doc_id, $data);
+    }
+
+
+    /**
+     * Set bucket data for a document
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     */
+    public function setDocumentOwnerName($doc_id, $name)
+    {
+        return $this->_strategy->setDocumentOwnerName($doc_id, $name);
     }
 
 
@@ -134,13 +147,14 @@ class Client
      *
      * @throws BadClientDataException if program data is invalid or missing
      */
-    public function getProgramData( $doc_id )
+    public function getProgramData($doc_id)
     {
-        $program_data = $this->_strategy->getProgramData( $doc_id );
+        $program_data = $this->_strategy->getProgramData($doc_id);
 
-        if ( empty( $program_data[ 'data' ] )
-            || !is_array( $program_data[ 'data' ] ) )
-        {
+        if (
+            empty($program_data[ 'data' ])
+            || !is_array($program_data[ 'data' ])
+        ) {
             throw new BadClientDataException(
                 "Invalid or missing program data"
             );
@@ -163,11 +177,12 @@ class Client
      * @throws BadClientDataException if document content is invalid or missing
      * @throws BadClientDataException if data are invalid or missing
      */
-    protected function getBucketData( array $doc_data )
+    protected function getBucketData(array $doc_data)
     {
-        if ( !isset( $doc_data[ 'content' ] )
-            || !is_array( $doc_data[ 'content' ] ) )
-        {
+        if (
+            !isset($doc_data[ 'content' ])
+            || !is_array($doc_data[ 'content' ])
+        ) {
             throw new BadClientDataException(
                 "Invalid or missing content data"
             );
@@ -175,9 +190,10 @@ class Client
 
         $content = $doc_data[ 'content' ];
 
-        if ( empty( $content[ 'data' ] )
-            || !is_array( $content[ 'data' ] ) )
-        {
+        if (
+            empty($content[ 'data' ])
+            || !is_array($content[ 'data' ])
+        ) {
             throw new BadClientDataException(
                 "Invalid or missing bucket data"
             );
@@ -200,21 +216,28 @@ class Client
      * @throws BadClientDataException if document content is invalid or missing
      * @throws BadClientDataException if data are invalid or missing
      */
-    protected function getMetaBucketData( array $doc_data )
+    protected function getMetaBucketData(array $doc_data)
     {
-        if ( !isset( $doc_data[ 'content' ] )
-            || !is_array( $doc_data[ 'content' ] ) )
-        {
+        if (
+            !isset($doc_data[ 'content' ])
+            || !is_array($doc_data[ 'content' ])
+        ) {
+            // Unreachable by phpunit.
+            // getBucketData will catch this before
+            // execution gets here
+            // @codeCoverageIgnoreStart
             throw new BadClientDataException(
                 "Invalid or missing content data"
             );
+            // @codeCoverageIgnoreEnd
         }
 
         $content = $doc_data[ 'content' ];
 
-        if ( empty( $content[ 'meta' ] )
-            || !is_array( $content[ 'meta' ] ) )
-        {
+        if (
+            empty($content[ 'meta' ])
+            || !is_array($content[ 'meta' ])
+        ) {
             throw new BadClientDataException(
                 "Invalid or missing meta data"
             );
@@ -222,6 +245,4 @@ class Client
 
         return $content[ 'meta' ];
     }
-
-
 }

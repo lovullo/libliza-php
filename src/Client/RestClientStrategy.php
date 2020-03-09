@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RESTful client data retrieval
  *
@@ -22,6 +23,7 @@
 
 namespace Lovullo\Liza\Client;
 
+use Lovullo\Liza\Client\NotImplementedException;
 
 /**
  * Retrieves data over a RESTful interface
@@ -32,8 +34,7 @@ namespace Lovullo\Liza\Client;
  * not have right now; for the time being, we'll restrict network activity
  * to a single method that can be overridden.
  */
-class RestClientStrategy
-    implements ClientStrategy
+class RestClientStrategy implements ClientStrategy
 {
     /**
      * Base URL of REST endpoint
@@ -56,7 +57,7 @@ class RestClientStrategy
      * @param string $base_url base URL for REST endpoint
      * @param string $skey     Session key
      */
-    public function __construct( $base_url, $skey )
+    public function __construct($base_url, $skey)
     {
         $this->_base_url = (string)$base_url;
         $this->_skey     = (string)$skey;
@@ -73,15 +74,15 @@ class RestClientStrategy
      *
      * @return array document data
      */
-    public function getDocumentData( $doc_id )
+    public function getDocumentData($doc_id)
     {
         $doc_id = (string)$doc_id;
 
         $doc_data = $this->translateDocId(
-            $this->queryDocument( $this->_base_url, $doc_id, 'init' )
+            $this->queryDocument($this->_base_url, $doc_id, 'init')
         );
 
-        $this->verifyData( $doc_data );
+        $this->verifyData($doc_data);
 
         return $doc_data;
     }
@@ -94,12 +95,12 @@ class RestClientStrategy
      *
      * @return array program data
      */
-    public function getProgramData( $doc_id )
+    public function getProgramData($doc_id)
     {
         $doc_id = (string)$doc_id;
 
         $program_data = $this->translateDocId(
-            $this->queryDocument( $this->_base_url, $doc_id, 'progdata' )
+            $this->queryDocument($this->_base_url, $doc_id, 'progdata')
         );
 
         return $program_data;
@@ -107,21 +108,36 @@ class RestClientStrategy
 
 
     /**
-     * Send updated bucket data to the server
+     * Set updated bucket data to the server
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array
      *
      * @return string JSON object
      */
-    public function sendBucketData( $doc_id, $data )
+    public function setDocumentData($doc_id, array $data)
     {
         $doc_id = (string)$doc_id;
 
-        $this->verifyData( $data[ 'data' ] );
-        $data[ 'data' ] = json_encode( $data[ 'data' ] );
+        $this->verifyData($data[ 'data' ]);
+        $data[ 'data' ] = json_encode($data[ 'data' ]);
 
-        return $this->postData( $this->_base_url, $doc_id, 'step/1/post', $data );
+        return $this->postData($this->_base_url, $doc_id, 'step/1/post', $data);
+    }
+
+
+    /**
+     * Update the agentName field on a document
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     * @SuppressWarnings(PHPMD)  not implemented yet, satifying interfaces
+     */
+    public function setDocumentOwnerName($doc_id, $owner_name)
+    {
+        throw new NotImplementedException('This feature has not been implemented');
     }
 
 
@@ -141,12 +157,12 @@ class RestClientStrategy
      *
      * @return array document data
      */
-    protected function queryDocument( $base_url, $doc_id, $endpoint )
+    protected function queryDocument($base_url, $doc_id, $endpoint)
     {
         $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
 
         return json_decode(
-            file_get_contents( $url ),
+            file_get_contents($url),
             true
         );
     }
@@ -169,11 +185,11 @@ class RestClientStrategy
      *
      * @return string JSON object
      */
-    protected function postData( $base_url, $doc_id, $endpoint, $data )
+    protected function postData($base_url, $doc_id, $endpoint, $data)
     {
         $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
 
-        $content = http_build_query( $data );
+        $content = http_build_query($data);
         $options = [
             'http' => [
                 'method' => 'POST',
@@ -182,9 +198,9 @@ class RestClientStrategy
                 'timeout' => 60
             ]
         ];
-        $context = stream_context_create( $options );
+        $context = stream_context_create($options);
 
-        return file_get_contents( $url, false, $context );
+        return file_get_contents($url, false, $context);
     }
 
 
@@ -202,12 +218,11 @@ class RestClientStrategy
      *
      * @return array document data with quote id translation
      */
-    protected function translateDocId( array $doc_data )
+    protected function translateDocId(array $doc_data)
     {
-        if ( array_key_exists( 'quoteId', $doc_data ) )
-        {
+        if (array_key_exists('quoteId', $doc_data)) {
             $doc_data[ 'id' ] = $doc_data[ 'quoteId' ];
-            unset( $doc_data[ 'quoteId' ] );
+            unset($doc_data[ 'quoteId' ]);
         }
 
         return $doc_data;
@@ -224,11 +239,12 @@ class RestClientStrategy
      *
      * @throws BadClientDataException
      */
-    protected function verifyData( array $doc_data )
+    protected function verifyData(array $doc_data)
     {
-        if ( !isset( $doc_data[ 'id' ] )
-            && !isset( $doc_data[ 'quoteId' ] ) )
-        {
+        if (
+            !isset($doc_data[ 'id' ])
+            && !isset($doc_data[ 'quoteId' ])
+        ) {
             throw new BadClientDataException(
                 "Data are missing document id"
             );

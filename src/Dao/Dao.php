@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Bucket string formatter
+ * Liza server dao
  *
- *  Copyright (C) 2016 LoVullo Associates, Inc.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -21,19 +21,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Lovullo\Liza\Bucket\Formatter;
+namespace Lovullo\Liza\Dao;
 
-use Lovullo\Liza\Bucket\Bucket;
-
-/**
- * Format bucket contents into string
- */
-interface BucketFormatter
+interface Dao
 {
     /**
-     * Build string from bucket
+     * Update Mongo document with transformed quote data
      *
-     * @param Bucket $bucket bucket from which data should be retrieved
+     * @param integer $mongo_quote_id Quote ID used for document
+     * @param array   $mongo_data     Array built for data updates
+     *
+     * @return mixed Results of the mongo query call
      */
-    public function format(Bucket $bucket);
+    public function update($mongo_quote_id, array $mongo_data);
 }

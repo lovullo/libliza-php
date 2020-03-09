@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Generic document factory
  *
@@ -24,7 +25,6 @@ namespace Lovullo\Liza\Document;
 
 use Lovullo\Liza\Bucket\Bucket;
 
-
 /**
  * Creates documents from raw data
  */
@@ -46,20 +46,17 @@ class DocumentFactory
      * @throws BadDocumentDataException if `id` key is missing or empty
      */
     final public function fromData(
-        array  $doc_data,
+        array $doc_data,
         Bucket $bucket,
         Bucket $meta_bucket
-    )
-    {
-        if ( empty( $doc_data[ 'id' ] ) )
-        {
+    ) {
+        if (empty($doc_data[ 'id' ])) {
             throw new BadDocumentDataException(
                 "Invalid or incomplete document data: missing 'id'"
             );
         }
 
-        if ( empty( $doc_data[ 'content' ] ) )
-        {
+        if (empty($doc_data[ 'content' ])) {
             throw new BadDocumentDataException(
                 "Invalid or incomplete document data: missing 'content'"
             );
@@ -68,7 +65,7 @@ class DocumentFactory
         $doc_id = $doc_data[ 'id' ];
         $meta   = $doc_data[ 'content' ];
 
-        return $this->createDocument( $doc_id, $bucket, $meta_bucket, $meta );
+        return $this->createDocument($doc_id, $bucket, $meta_bucket, $meta);
     }
 
 
@@ -91,8 +88,7 @@ class DocumentFactory
         Bucket $bucket,
         Bucket $meta_bucket,
         array $meta = []
-    )
-    {
-        return new Document( $doc_id, $bucket, $meta_bucket, $meta );
+    ) {
+        return new Document($doc_id, $bucket, $meta_bucket, $meta);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Bucket string formatter
+ * Not Implemented mothod exception
  *
- *  Copyright (C) 2016 LoVullo Associates, Inc.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -21,19 +21,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Lovullo\Liza\Bucket\Formatter;
-
-use Lovullo\Liza\Bucket\Bucket;
+namespace Lovullo\Liza\Client;
 
 /**
- * Format bucket contents into string
+ * When a method is called has not been implemented yet
+ *
+ * N.B: This exception should not provide the bad data, as that would leak
+ * implementation details (and potentially very sensitive data); this is a
+ * public-facing exception!
  */
-interface BucketFormatter
+class NotImplementedException extends \BadMethodCallException
 {
-    /**
-     * Build string from bucket
-     *
-     * @param Bucket $bucket bucket from which data should be retrieved
-     */
-    public function format(Bucket $bucket);
 }

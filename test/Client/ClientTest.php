@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests Liza client
  *
@@ -25,12 +26,11 @@ namespace Lovullo\Liza\Tests\Client;
 use Lovullo\Liza\Client\Client as Sut;
 use Lovullo\Liza\Client\BadClientDataException;
 
-class ClientTest
-    extends \PHPUnit_Framework_TestCase
+class ClientTest extends \PHPUnit_Framework_TestCase
 {
-    protected function createSut( $strategy, $doc_factory, $bucket_factory )
+    protected function createSut($strategy, $doc_factory, $bucket_factory)
     {
-        return new Sut( $strategy, $doc_factory, $bucket_factory );
+        return new Sut($strategy, $doc_factory, $bucket_factory);
     }
 
 
@@ -48,7 +48,7 @@ class ClientTest
         return $this->getMockBuilder(
             'Lovullo\Liza\Document\DocumentFactory'
         )
-            ->setMethods( array( 'createDocument' ) )
+            ->setMethods(array( 'createDocument' ))
             ->getMock();
     }
 
@@ -59,7 +59,7 @@ class ClientTest
             'Lovullo\Liza\Bucket\BucketFactory'
         )
             ->disableOriginalConstructor()
-            ->setMethods( array( 'fromData' ) )
+            ->setMethods(array( 'fromData' ))
             ->getMock();
     }
 
@@ -117,14 +117,14 @@ class ClientTest
         ];
 
         $mock_strategy
-            ->expects( $this->once() )
-            ->method( 'getDocumentData' )
-            ->with( $doc_request_id )
-            ->willReturn( $mock_return );
+            ->expects($this->once())
+            ->method('getDocumentData')
+            ->with($doc_request_id)
+            ->willReturn($mock_return);
 
         $this->assertSame(
             $mock_return,
-            $sut->getDocumentData( $doc_request_id )
+            $sut->getDocumentData($doc_request_id)
         );
     }
 
@@ -154,14 +154,48 @@ class ClientTest
         ];
 
         $mock_strategy
-            ->expects( $this->once() )
-            ->method( 'sendBucketData' )
-            ->with( $doc_request_id, $parameters )
-            ->willReturn(  $mock_return );
+            ->expects($this->once())
+            ->method('setDocumentData')
+            ->with($doc_request_id, $parameters)
+            ->willReturn($mock_return);
 
         $this->assertSame(
             $mock_return,
-            $sut->sendBucketData( $doc_request_id, $parameters )
+            $sut->setDocumentData($doc_request_id, $parameters)
+        );
+    }
+
+
+    public function testSetOwnerName()
+    {
+        $mock_strategy = $this->getMockBuilder('Lovullo\Liza\Client\MongoClientStrategy')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+        $doc_request_id      = 200007;
+        $agentName           = 'john';
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $mock_return = [
+            'quoteId'  => $doc_request_id,
+            'hasError' => false
+        ];
+
+        $mock_strategy
+            ->expects($this->once())
+            ->method('setDocumentOwnerName')
+            ->with($doc_request_id, $agentName)
+            ->willReturn($mock_return);
+
+        $this->assertSame(
+            $mock_return,
+            $sut->setDocumentOwnerName($doc_request_id, $agentName)
         );
     }
 
@@ -195,34 +229,34 @@ class ClientTest
         ];
 
         $mock_strategy
-            ->expects( $this->once() )
-            ->method( 'getDocumentData' )
-            ->with( $doc_request_id )
-            ->willReturn( $doc_data );
+            ->expects($this->once())
+            ->method('getDocumentData')
+            ->with($doc_request_id)
+            ->willReturn($doc_data);
 
         $mock_bucket_factory
-            ->expects( $this->at( 0 ) )
-            ->method( 'fromData' )
-            ->with( $bucket_data )
-            ->willReturn( $bucket );
+            ->expects($this->at(0))
+            ->method('fromData')
+            ->with($bucket_data)
+            ->willReturn($bucket);
 
         $mock_bucket_factory
-            ->expects( $this->at( 1 ) )
-            ->method( 'fromData' )
-            ->with( $meta_bucket_data )
-            ->willReturn( $meta_bucket );
+            ->expects($this->at(1))
+            ->method('fromData')
+            ->with($meta_bucket_data)
+            ->willReturn($meta_bucket);
 
         $mock_doc_factory
-            ->expects( $this->once() )
-            ->method( 'createDocument' )
-            ->with( $doc_id, $bucket, $meta_bucket )
-            ->willReturn( $document );
+            ->expects($this->once())
+            ->method('createDocument')
+            ->with($doc_id, $bucket, $meta_bucket)
+            ->willReturn($document);
 
         // this ensures that the document id that is actually used in the
         // end is the one returned by the server, not the one we provide
         $this->assertSame(
             $document,
-            $sut->getDocument( $doc_request_id )
+            $sut->getDocument($doc_request_id)
         );
     }
 
@@ -243,15 +277,15 @@ class ClientTest
         $dummy_data[ 'content' ] = [];
 
         $mock_strategy
-            ->method( 'getDocumentData' )
-            ->willReturn( $dummy_data );
+            ->method('getDocumentData')
+            ->willReturn($dummy_data);
 
         $this->setExpectedExceptionRegexp(
             BadClientDataException::class,
             "/Invalid or missing bucket data/"
         );
 
-        $sut->getDocument( 0 );
+        $sut->getDocument(0);
     }
 
 
@@ -271,15 +305,15 @@ class ClientTest
         $document = [ 'id' => '' ];
 
         $mock_strategy
-            ->method( 'getDocumentData' )
-            ->willReturn( $document );
+            ->method('getDocumentData')
+            ->willReturn($document);
 
         $this->setExpectedExceptionRegexp(
             BadClientDataException::class,
             "/Invalid or missing content data/"
         );
 
-        $sut->getDocument( 0 );
+        $sut->getDocument(0);
     }
 
 
@@ -299,15 +333,15 @@ class ClientTest
         $dummy_data[ 'content' ][ 'data' ] = 'notarray';
 
         $mock_strategy
-            ->method( 'getDocumentData' )
-            ->willReturn( $dummy_data );
+            ->method('getDocumentData')
+            ->willReturn($dummy_data);
 
         $this->setExpectedExceptionRegexp(
             BadClientDataException::class,
             "/Invalid or missing bucket data/"
         );
 
-        $sut->getDocument( 0 );
+        $sut->getDocument(0);
     }
 
 
@@ -328,15 +362,15 @@ class ClientTest
         $dummy_data[ 'content' ][ 'meta' ] = 'notarray';
 
         $mock_strategy
-            ->method( 'getDocumentData' )
-            ->willReturn( $dummy_data );
+            ->method('getDocumentData')
+            ->willReturn($dummy_data);
 
         $this->setExpectedExceptionRegexp(
             BadClientDataException::class,
             "/Invalid or missing meta data/"
         );
 
-        $sut->getDocument( 0 );
+        $sut->getDocument(0);
     }
 
 
@@ -362,14 +396,14 @@ class ClientTest
         ];
 
         $mock_strategy
-            ->expects( $this->once() )
-            ->method( 'getProgramData' )
-            ->with( $doc_id )
-            ->willReturn( $doc_data );
+            ->expects($this->once())
+            ->method('getProgramData')
+            ->with($doc_id)
+            ->willReturn($doc_data);
 
-        $given = $sut->getProgramData( $doc_id );
+        $given = $sut->getProgramData($doc_id);
 
-        $this->assertEquals( $expected, $given );
+        $this->assertEquals($expected, $given);
     }
 
 
@@ -388,16 +422,16 @@ class ClientTest
         $doc_id = '345678';
 
         $mock_strategy
-            ->expects( $this->once() )
-            ->method( 'getProgramData' )
-            ->with( $doc_id )
-            ->willReturn( '' );
+            ->expects($this->once())
+            ->method('getProgramData')
+            ->with($doc_id)
+            ->willReturn('');
 
         $this->setExpectedExceptionRegexp(
             BadClientDataException::class,
             "/Invalid or missing program data/"
         );
 
-        $sut->getProgramData( $doc_id );
+        $sut->getProgramData($doc_id);
     }
 }

@@ -4,9 +4,7 @@ namespace Lovullo\Liza\Tests\Bucket;
 
 use Lovullo\Liza\Bucket\ImmutableBucket as Sut;
 
-
-class ImmutableBucketTest
-    extends BucketTestCase
+class ImmutableBucketTest extends BucketTestCase
 {
     /**
      * Return the bucket instance acting as the SUT
@@ -18,8 +16,8 @@ class ImmutableBucketTest
      *
      * @return ImmutableBucket
      */
-    protected function getSut( $initial_data )
+    protected function getSut($initial_data)
     {
-        return new Sut( $initial_data );
+        return new Sut($initial_data);
     }
 }

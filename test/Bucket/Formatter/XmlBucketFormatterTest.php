@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests bucket formatting as XML
  *
@@ -24,9 +25,7 @@ namespace Lovullo\Liza\Tests\Bucket\Formatter;
 
 use Lovullo\Liza\Bucket\Formatter\XmlBucketFormatter as Sut;
 
-
-class XmlBucketFormatterTest
-    extends BucketFormatterTestCase
+class XmlBucketFormatterTest extends BucketFormatterTestCase
 {
     /**
      * Test name for root node
@@ -75,52 +74,48 @@ class XmlBucketFormatterTest
 
     protected function createCaseSut()
     {
-        return new Sut( array(), 'foo' );
+        return new Sut(array(), 'foo');
     }
 
 
-    protected function getXml( array $dfn = null, $bucket = null )
+    protected function getXml(array $dfn = null, $bucket = null)
     {
         $dfn    = ( $dfn ) ?: $this->_default_dfn;
-        $bucket = $bucket ?: $this->getMockBucket( $this->_bucket_data );
+        $bucket = $bucket ?: $this->getMockBucket($this->_bucket_data);
 
-        $sut = new Sut( $dfn, $this->_root_node_name );
+        $sut = new Sut($dfn, $this->_root_node_name);
 
         // returns string, so translate back into a SimpleXMLElement that we
         // can query
         return simplexml_load_string(
-            $sut->format( $bucket )
+            $sut->format($bucket)
         );
     }
 
 
-    protected function assertNodes( array $asserts, $xml = null )
+    protected function assertNodes(array $asserts, $xml = null)
     {
         $use_xml = $xml ?: $this->getXml();
 
-        foreach ( $asserts as $xpath => $expected )
-        {
+        foreach ($asserts as $xpath => $expected) {
             $value = '';
 
             // honor custom nodes
             $data  = ( $xml !== null )
-                ? $use_xml->xpath( $xpath )
-                : $use_xml->xpath( "/$this->_root_node_name/$xpath" );
+                ? $use_xml->xpath($xpath)
+                : $use_xml->xpath("/$this->_root_node_name/$xpath");
 
             // PHP is obnoxious in that it will not return the value of an
             // attribute directly, even if it's explicitly requested within an
             // XPath query
-            if ( preg_match( '/\/@(.*)$/', $xpath, $match ) )
-            {
+            if (preg_match('/\/@(.*)$/', $xpath, $match)) {
                 // prior to array dereferencing support in PHP
                 $value = (string)( $data[ 0 ][ $match[ 1 ] ] );
-            }
-            else
-            {
+            } else {
                 $value = (string)( $data[ 0 ] );
             }
 
-            $this->assertEquals( $expected, $value );
+            $this->assertEquals($expected, $value);
         }
     }
 
@@ -129,8 +124,9 @@ class XmlBucketFormatterTest
     {
         $result = $this->getXml();
 
-        $this->assertEquals( 1,
-            count( $result->xpath( '/' . $this->_root_node_name ) ),
+        $this->assertEquals(
+            1,
+            count($result->xpath('/' . $this->_root_node_name)),
             'Should generate correct root node'
         );
     }
@@ -138,54 +134,54 @@ class XmlBucketFormatterTest
 
     public function testCanAddAttributes()
     {
-        $this->assertNodes( array(
+        $this->assertNodes(array(
             '/@root'        => $this->_default_dfn['@root'],
             '/sub/@subattr' => $this->_default_dfn['sub']['@subattr'],
-        ) );
+        ));
     }
 
 
     public function testCanUseBucketValuesForAttributes()
     {
-        $this->assertNodes( array(
+        $this->assertNodes(array(
             '/@bval'  => $this->_bucket_data[ 'foo' ][ 0 ],
             '/@bval1' => $this->_bucket_data[ 'foo' ][ 1 ],
-        ) );
+        ));
     }
 
 
     public function testCanAddNodes()
     {
-        $this->assertNodes( array(
+        $this->assertNodes(array(
             '/val' => $this->_default_dfn['val'],
             '/sub/val' => $this->_default_dfn['sub']['val'],
-        ) );
+        ));
     }
 
 
     public function testCanUseBucketValuesForNodes()
     {
-        $this->assertNodes( array(
+        $this->assertNodes(array(
             '/@bval'  => $this->_bucket_data[ 'foo' ][ 0 ],
             '/@bval1' => $this->_bucket_data[ 'foo' ][ 1 ],
-        ) );
+        ));
     }
 
 
     public function testCanDuplicateNodes()
     {
-        $this->assertNodes( array(
+        $this->assertNodes(array(
             '/foo[1]/val' => $this->_bucket_data[ 'foos' ][ 0 ],
             '/foo[2]/val' => $this->_bucket_data[ 'foos' ][ 1 ],
-        ) );
+        ));
     }
 
 
     public function testAmpersandsAreNotAnIssue()
     {
-        $this->assertNodes( array(
+        $this->assertNodes(array(
             '/esc' => $this->_default_dfn['esc'],
-        ) );
+        ));
     }
 
 
@@ -197,32 +193,30 @@ class XmlBucketFormatterTest
             ),
         );
 
-        $bucket = $this->getMockBucket( array() );
+        $bucket = $this->getMockBucket(array());
 
         $given_gen_result = null;
         $given_bucket     = null;
         $expected         = 'quux';
         $expected_attr    = 'quuux_attr';
 
-        $result = $this->getXml( array(
+        $result = $this->getXml(array(
             'foo' => array(
-                'apply' => function( \Closure $generate, $bucket )
-                    use ( $gen_data, $expected, &$given_gen_result )
-                {
+                'apply' => function (\Closure $generate, $bucket)
+ use ($gen_data, $expected, &$given_gen_result) {
                     // will be a SimpleXmlElement
-                    $given_gen_result = $generate( $gen_data );
+                    $given_gen_result = $generate($gen_data);
 
                     return $expected;
                 },
-                '@apply' => function( \Closure $generate, $bucket )
-                    use ( $expected_attr, &$given_bucket )
-                {
+                '@apply' => function (\Closure $generate, $bucket)
+ use ($expected_attr, &$given_bucket) {
                     $given_bucket = $bucket;
 
                     return $expected_attr;
                 },
             ),
-        ), $bucket );
+        ), $bucket);
 
         // overall result
         $this->assertNodes(
@@ -242,6 +236,6 @@ class XmlBucketFormatterTest
         );
 
         // we should have been given an actual bucket reference
-        $this->assertSame( $bucket, $given_bucket );
+        $this->assertSame($bucket, $given_bucket);
     }
 }

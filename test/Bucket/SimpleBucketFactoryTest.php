@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Simple bucket factory
  *
@@ -24,9 +25,7 @@ namespace Lovullo\Liza\Tests\Bucket;
 
 use Lovullo\Liza\Bucket\SimpleBucketFactory as Sut;
 
-
-class SimpleBucketFactoryTest
-    extends BucketFactoryTestCase
+class SimpleBucketFactoryTest extends BucketFactoryTestCase
 {
     protected function getSut()
     {
@@ -40,7 +39,7 @@ class SimpleBucketFactoryTest
         // subtype; we'll have to trust it
         $this->assertInstanceOf(
             'Lovullo\Liza\Bucket\ImmutableBucket',
-            $this->getSut()->fromData( array() )
+            $this->getSut()->fromData(array())
         );
     }
 }

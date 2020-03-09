@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bad client data exception
  *
@@ -22,7 +23,6 @@
 
 namespace Lovullo\Liza\Client;
 
-
 /**
  * Client was provided with data that is incomplete or poorly formatted
  *
@@ -30,7 +30,6 @@ namespace Lovullo\Liza\Client;
  * implementation details (and potentially very sensitive data); this is a
  * public-facing exception!
  */
-class BadClientDataException
-    extends \DomainException
+class BadClientDataException extends \DomainException
 {
 }

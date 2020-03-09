@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Bucket string formatter
+ * Liza server dao
  *
- *  Copyright (C) 2016 LoVullo Associates, Inc.
+ *  Copyright (C) 2016-2020 Ryan Specialty Group, LLC.
  *
  *  This file is part of libliza-php.
  *
@@ -21,19 +21,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Lovullo\Liza\Bucket\Formatter;
+namespace Lovullo\Liza\Tests\Dao;
 
-use Lovullo\Liza\Bucket\Bucket;
+use Lovullo\Liza\Dao\MongoDaoFactory as Sut;
+use Lovullo\Liza\Dao\MongoDao;
+use MongoClient;
 
-/**
- * Format bucket contents into string
- */
-interface BucketFormatter
+class MongoDaoFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Build string from bucket
-     *
-     * @param Bucket $bucket bucket from which data should be retrieved
-     */
-    public function format(Bucket $bucket);
+    private function createSut()
+    {
+        return new Sut();
+    }
+
+
+    public function testCreateSut()
+    {
+        $sut = $this->createSut();
+        $this->assertInstanceOf(Sut::class, $sut);
+    }
 }

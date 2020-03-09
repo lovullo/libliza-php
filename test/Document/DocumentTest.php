@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests generic document
  *
@@ -22,24 +23,23 @@
 
 namespace Lovullo\Liza\Tests\Document;
 
-use \Lovullo\Liza\Document\Document as Sut;
+use Lovullo\Liza\Document\Document as Sut;
 
-class DocumentTest
-    extends \PHPUnit_Framework_TestCase
+class DocumentTest extends \PHPUnit_Framework_TestCase
 {
     protected function getDummyBucket()
     {
         return $this->getMockBuilder(
             "Lovullo\Liza\Bucket\Bucket"
         )
-            ->setMethods( array( "getDataByName", "hasData", "getDataByRegEx" ) )
+            ->setMethods(array( "getDataByName", "hasData", "getDataByRegEx" ))
             ->getMock();
     }
 
 
-    protected function createSut( $id, $bucket, $meta_bucket, $meta = [] )
+    protected function createSut($id, $bucket, $meta_bucket, $meta = [])
     {
-        return new Sut( $id, $bucket, $meta_bucket, $meta );
+        return new Sut($id, $bucket, $meta_bucket, $meta);
     }
 
 
@@ -78,7 +78,7 @@ class DocumentTest
 
         $this->assertSame(
             $bucket,
-            $this->createSut( "foo", $bucket, $meta_bucket )->getBucket()
+            $this->createSut("foo", $bucket, $meta_bucket)->getBucket()
         );
     }
 
@@ -90,7 +90,7 @@ class DocumentTest
 
         $this->assertSame(
             $meta_bucket,
-            $this->createSut( "foo", $bucket, $meta_bucket )->getMetaBucket()
+            $this->createSut("foo", $bucket, $meta_bucket)->getMetaBucket()
         );
     }
 
@@ -119,9 +119,9 @@ class DocumentTest
     /**
      * @dataProvider gettersDataProvider
      */
-    public function testGetters( array $meta, $expected )
+    public function testGetters(array $meta, $expected)
     {
-        $methodName = "get" . ucfirst( array_keys( $meta )[0] );
+        $methodName = "get" . ucfirst(array_keys($meta)[0]);
 
         $this->assertEquals(
             $expected,
@@ -146,7 +146,7 @@ class DocumentTest
     /**
      * @dataProvider emptyGettersDataProvider
      */
-    public function testEmptyGetters( $methodName )
+    public function testEmptyGetters($methodName)
     {
         $this->assertEquals(
             "",
@@ -177,7 +177,7 @@ class DocumentTest
      * @dataProvider exceptionGettersDataProvider
      * @expectedException \Lovullo\Liza\Document\MissingDocumentFieldException
      */
-    public function testExceptionGetters( $methodName )
+    public function testExceptionGetters($methodName)
     {
         $this->createSut(
             1234,

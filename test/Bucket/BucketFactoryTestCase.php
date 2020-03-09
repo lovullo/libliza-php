@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bucket factory common test
  *
@@ -22,18 +23,16 @@
 
 namespace Lovullo\Liza\Tests\Bucket;
 
-
-abstract class BucketFactoryTestCase
-    extends \PHPUnit_Framework_TestCase
+abstract class BucketFactoryTestCase extends \PHPUnit_Framework_TestCase
 {
-    protected abstract function getSut();
+    abstract protected function getSut();
 
 
     public function testReturnsBucketObject()
     {
         $this->assertInstanceOf(
             'Lovullo\Liza\Bucket\Bucket',
-            $this->getSut()->fromData( array() )
+            $this->getSut()->fromData(array())
         );
     }
 }
