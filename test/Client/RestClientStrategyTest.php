@@ -292,5 +292,16 @@ namespace Lovullo\Liza\Tests\Client
         {
             $this->createSut()->setDocumentOwnerName(0, []);
         }
+
+
+        /**
+        * Overrides unneeded parent test
+        *
+        * @expectedException Lovullo\Liza\Client\NotImplementedException
+        */
+        public function testSetDocumentOwnerIdNotImplemented()
+        {
+            $this->createSut()->setDocumentOwnerId(0, []);
+        }
     }
 }

@@ -94,12 +94,26 @@ class MongoClientStrategy implements ClientStrategy
      * Update the agentName field on a document
      *
      * @param string $doc_id Document id
-     * @param array  $data   The data as an array
+     * @param string $name   The entity name
      *
      * @return string JSON object
      */
-    public function setDocumentOwnerName($doc_id, $owner_name)
+    public function setDocumentOwnerName($doc_id, $agent_name)
     {
-        return json_encode($this->_dao->update($doc_id, ['agentName' => $owner_name]));
+        return json_encode($this->_dao->update($doc_id, ['agentName' => $agent_name]));
+    }
+
+
+    /**
+     * Update the agentName field on a document
+     *
+     * @param string $doc_id Document id
+     * @param string $id     The entity id
+     *
+     * @return string JSON object
+     */
+    public function setDocumentOwnerId($doc_id, $agent_entity_id)
+    {
+        return json_encode($this->_dao->update($doc_id, ['agentEntityId' => $agent_entity_id]));
     }
 }

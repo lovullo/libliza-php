@@ -128,13 +128,27 @@ class Client
      * Set bucket data for a document
      *
      * @param string $doc_id Document id
-     * @param array  $data   The data as an array
+     * @param string $name   The entity's name
      *
      * @return string JSON object
      */
     public function setDocumentOwnerName($doc_id, $name)
     {
         return $this->_strategy->setDocumentOwnerName($doc_id, $name);
+    }
+
+
+    /**
+     * Set bucket data for a document
+     *
+     * @param string $doc_id Document id
+     * @param string $id     The entity's id
+     *
+     * @return string JSON object
+     */
+    public function setDocumentOwnerId($doc_id, $id)
+    {
+        return $this->_strategy->setDocumentOwnerId($doc_id, $id);
     }
 
 

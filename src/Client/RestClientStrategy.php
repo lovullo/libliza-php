@@ -142,6 +142,21 @@ class RestClientStrategy implements ClientStrategy
 
 
     /**
+     * Update the agentEntityId field on a document
+     *
+     * @param string $doc_id Document id
+     * @param array  $data   The data as an array
+     *
+     * @return string JSON object
+     * @SuppressWarnings(PHPMD)  not implemented yet, satifying interfaces
+     */
+    public function setDocumentOwnerId($doc_id, $owner_name)
+    {
+        throw new NotImplementedException('This feature has not been implemented');
+    }
+
+
+    /**
      * Query server for document data
      *
      * TODO: This will eventually use a network abstraction; until that
