@@ -217,8 +217,8 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $dao     = $this->mockDao($mongo);
         $sut     = new Sut($dao);
 
-        $id            = '12345';
-        $agent_entity_id = 'AGT12345';
+        $id              = '12345';
+        $agent_entity_id = 12434300;
 
         $data = [
             'agentEntityId' => $agent_entity_id
@@ -242,5 +242,23 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $actual = json_decode($actual, true);
 
         $this->assertEquals(1, $actual[ 'ok' ]);
+    }
+
+
+    /**
+    * @expectedException Lovullo\Liza\Client\BadClientDataException
+    */
+    public function testUpdateOwnerIdThrowsBadDataException()
+    {
+        $quote   = $this->mockQuotes();
+        $program = $this->mockProgram($quote);
+        $mongo   = $this->mockMongo($program);
+        $dao     = $this->mockDao($mongo);
+        $sut     = new Sut($dao);
+
+        $id              = '12345';
+        $agent_entity_id = 'x12434300';
+
+        $actual = $sut->setDocumentOwnerId($id, $agent_entity_id);
     }
 }
