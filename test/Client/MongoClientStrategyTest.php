@@ -181,10 +181,11 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $dao     = $this->mockDao($mongo);
         $sut     = new Sut($dao);
 
-        $id = '12345';
-        $agentName = 'john';
+        $id         = '12345';
+        $agent_name = 'john';
+
         $data = [
-            'agentName' => $agentName
+            'agentName' => $agent_name
         ];
 
         $dao_return = [
@@ -201,9 +202,63 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
             ->with($id, $data)
             ->willReturn($dao_return);
 
-        $actual = $sut->setDocumentOwnerName($id, $agentName);
+        $actual = $sut->setDocumentOwnerName($id, $agent_name);
         $actual = json_decode($actual, true);
 
         $this->assertEquals(1, $actual[ 'ok' ]);
+    }
+
+
+    public function testItUpdatesTheOwnerId()
+    {
+        $quote   = $this->mockQuotes();
+        $program = $this->mockProgram($quote);
+        $mongo   = $this->mockMongo($program);
+        $dao     = $this->mockDao($mongo);
+        $sut     = new Sut($dao);
+
+        $id              = '12345';
+        $agent_entity_id = 12434300;
+
+        $data = [
+            'agentEntityId' => $agent_entity_id
+        ];
+
+        $dao_return = [
+            'ok' => 1,
+            'nModified' => 0,
+            'n' => 0,
+            'err' => null,
+            'errmsg' => null,
+            'updatedExisting' => 1,
+        ];
+
+        $dao->expects($this->once())
+            ->method('update')
+            ->with($id, $data)
+            ->willReturn($dao_return);
+
+        $actual = $sut->setDocumentOwnerId($id, $agent_entity_id);
+        $actual = json_decode($actual, true);
+
+        $this->assertEquals(1, $actual[ 'ok' ]);
+    }
+
+
+    /**
+    * @expectedException Lovullo\Liza\Client\BadClientDataException
+    */
+    public function testUpdateOwnerIdThrowsBadDataException()
+    {
+        $quote   = $this->mockQuotes();
+        $program = $this->mockProgram($quote);
+        $mongo   = $this->mockMongo($program);
+        $dao     = $this->mockDao($mongo);
+        $sut     = new Sut($dao);
+
+        $id              = '12345';
+        $agent_entity_id = 'x12434300';
+
+        $actual = $sut->setDocumentOwnerId($id, $agent_entity_id);
     }
 }

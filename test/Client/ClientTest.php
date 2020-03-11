@@ -200,6 +200,42 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testSetOwnerId()
+    {
+        $mock_strategy = $this->getMockBuilder('Lovullo\Liza\Client\MongoClientStrategy')
+            ->disableOriginalConstructor()
+            ->setMethods(['setDocumentOwnerId'])
+            ->getMock();
+
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+        $doc_request_id      = 200007;
+        $agent_entity_id     = 'AGT12345';
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $mock_return = [
+            'quoteId'  => $doc_request_id,
+            'hasError' => false
+        ];
+
+        $mock_strategy
+            ->expects($this->once())
+            ->method('setDocumentOwnerId')
+            ->with($doc_request_id, $agent_entity_id)
+            ->willReturn($mock_return);
+
+        $this->assertSame(
+            $mock_return,
+            $sut->setDocumentOwnerId($doc_request_id, $agent_entity_id)
+        );
+    }
+
+
     public function testRetrievesDocumentDataForGivenId()
     {
         $mock_strategy       = $this->createMockStrategy();

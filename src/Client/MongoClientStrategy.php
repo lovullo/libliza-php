@@ -24,6 +24,7 @@
 namespace Lovullo\Liza\Client;
 
 use Lovullo\Liza\Dao\Dao;
+use Lovullo\Liza\Client\BadClientDataException;
 use Lovullo\Liza\Client\NotImplementedException;
 
 class MongoClientStrategy implements ClientStrategy
@@ -94,12 +95,32 @@ class MongoClientStrategy implements ClientStrategy
      * Update the agentName field on a document
      *
      * @param string $doc_id Document id
-     * @param array  $data   The data as an array
+     * @param string $name   The entity name
      *
      * @return string JSON object
      */
-    public function setDocumentOwnerName($doc_id, $owner_name)
+    public function setDocumentOwnerName($doc_id, $agent_name)
     {
-        return json_encode($this->_dao->update($doc_id, ['agentName' => $owner_name]));
+        return json_encode($this->_dao->update($doc_id, ['agentName' => $agent_name]));
+    }
+
+
+    /**
+     * Update the agentEntityId field on a document
+     *
+     * @param string  $doc_id Document id
+     * @param integer $id     The entity id
+     *
+     * @return string JSON object
+     *
+     * @throws BadClientDataException
+     */
+    public function setDocumentOwnerId($doc_id, $agent_entity_id)
+    {
+        if (!is_numeric($agent_entity_id)) {
+            throw new BadClientDataException('Owner ID must be numeric');
+        }
+
+        return json_encode($this->_dao->update($doc_id, ['agentEntityId' => (int)$agent_entity_id]));
     }
 }
