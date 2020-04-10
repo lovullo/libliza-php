@@ -204,6 +204,42 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testSetDocumentOrigin()
+    {
+        $mock_strategy = $this->getMockBuilder('Lovullo\Liza\Client\MongoClientStrategy')
+            ->disableOriginalConstructor()
+            ->setMethods(['setDocumentOrigin'])
+            ->getMock();
+
+        $mock_doc_factory    = $this->createMockDocFactory();
+        $mock_bucket_factory = $this->createMockBucketFactory();
+        $doc_request_id      = 200008;
+        $source              = ['ACORD_UPLOAD'];
+
+        $sut = $this->createSut(
+            $mock_strategy,
+            $mock_doc_factory,
+            $mock_bucket_factory
+        );
+
+        $mock_return = [
+            'quoteId'  => $doc_request_id,
+            'hasError' => false
+        ];
+
+        $mock_strategy
+            ->expects($this->once())
+            ->method('setDocumentOrigin')
+            ->with($doc_request_id, $source)
+            ->willReturn($mock_return);
+
+        $this->assertSame(
+            $mock_return,
+            $sut->setDocumentOrigin($doc_request_id, $source)
+        );
+    }
+
+
     public function testRetrievesDocumentDataForGivenId()
     {
         $mock_strategy       = $this->createMockStrategy();

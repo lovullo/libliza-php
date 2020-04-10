@@ -125,6 +125,20 @@ class Client
 
 
     /**
+     * Set origin for a document
+     *
+     * @param string $doc_id Document id
+     * @param array $origin The document source
+     *
+     * @return string JSON object
+     */
+    public function setDocumentOrigin($doc_id, array $origin)
+    {
+        return $this->_strategy->setDocumentOrigin($doc_id, $origin);
+    }
+
+
+    /**
      * Update the document owner fields on a document
      * These three fields work in conjunction to show ownership of the document
      * None of these fields should be updated without the others
