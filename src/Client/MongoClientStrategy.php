@@ -92,35 +92,29 @@ class MongoClientStrategy implements ClientStrategy
 
 
     /**
-     * Update the agentName field on a document
+     * Update the document owner fields on a document
+     * These three fields work in conjunction to show ownership of the document
+     * None of these fields should be updated without the others
      *
-     * @param string $doc_id Document id
-     * @param string $name   The entity name
-     *
-     * @return string JSON object
-     */
-    public function setDocumentOwnerName($doc_id, $agent_name)
-    {
-        return json_encode($this->_dao->update($doc_id, ['agentName' => $agent_name]));
-    }
-
-
-    /**
-     * Update the agentEntityId field on a document
-     *
-     * @param string  $doc_id Document id
-     * @param integer $id     The entity id
+     * @param string  $doc_id          Document id
+     * @param integer $agent_entity_id The entity id
+     * @param integer $agent_id        The owner id
+     * @param string  $agent_name      The owner name
      *
      * @return string JSON object
      *
      * @throws BadClientDataException
      */
-    public function setDocumentOwnerId($doc_id, $agent_entity_id)
+    public function setDocumentOwner($doc_id, $agent_entity_id, $agent_id, $agent_name)
     {
         if (!is_numeric($agent_entity_id)) {
-            throw new BadClientDataException('Owner ID must be numeric');
+            throw new BadClientDataException('Entity ID must be numeric');
         }
 
-        return json_encode($this->_dao->update($doc_id, ['agentEntityId' => (int)$agent_entity_id]));
+        return json_encode($this->_dao->update($doc_id, [
+            'agentEntityId' => (int)$agent_entity_id,
+            'agentId'       => (string)$agent_id,
+            'agentName'     => (string)$agent_name,
+        ]));
     }
 }

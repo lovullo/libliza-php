@@ -173,43 +173,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
     }
 
 
-    public function testItUpdatesTheOwnerName()
-    {
-        $quote   = $this->mockQuotes();
-        $program = $this->mockProgram($quote);
-        $mongo   = $this->mockMongo($program);
-        $dao     = $this->mockDao($mongo);
-        $sut     = new Sut($dao);
-
-        $id         = '12345';
-        $agent_name = 'john';
-
-        $data = [
-            'agentName' => $agent_name
-        ];
-
-        $dao_return = [
-            'ok' => 1,
-            'nModified' => 0,
-            'n' => 0,
-            'err' => null,
-            'errmsg' => null,
-            'updatedExisting' => 1,
-        ];
-
-        $dao->expects($this->once())
-            ->method('update')
-            ->with($id, $data)
-            ->willReturn($dao_return);
-
-        $actual = $sut->setDocumentOwnerName($id, $agent_name);
-        $actual = json_decode($actual, true);
-
-        $this->assertEquals(1, $actual[ 'ok' ]);
-    }
-
-
-    public function testItUpdatesTheOwnerId()
+    public function testItUpdatesTheOwner()
     {
         $quote   = $this->mockQuotes();
         $program = $this->mockProgram($quote);
@@ -219,9 +183,13 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
 
         $id              = '12345';
         $agent_entity_id = 12434300;
+        $agent_id        = 921322;
+        $agent_name      = 'john';
 
         $data = [
-            'agentEntityId' => $agent_entity_id
+            'agentEntityId' => $agent_entity_id,
+            'agentId'       => $agent_id,
+            'agentName'     => $agent_name,
         ];
 
         $dao_return = [
@@ -238,7 +206,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
             ->with($id, $data)
             ->willReturn($dao_return);
 
-        $actual = $sut->setDocumentOwnerId($id, $agent_entity_id);
+        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name);
         $actual = json_decode($actual, true);
 
         $this->assertEquals(1, $actual[ 'ok' ]);
@@ -258,7 +226,9 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
 
         $id              = '12345';
         $agent_entity_id = 'x12434300';
+        $agent_id        = 921322;
+        $agent_name      = 'john';
 
-        $actual = $sut->setDocumentOwnerId($id, $agent_entity_id);
+        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name);
     }
 }

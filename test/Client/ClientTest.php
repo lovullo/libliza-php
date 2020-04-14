@@ -166,15 +166,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testSetOwnerName()
+    public function testSetOwner()
     {
         $mock_strategy = $this->getMockBuilder('Lovullo\Liza\Client\MongoClientStrategy')
             ->disableOriginalConstructor()
+            ->setMethods(['setDocumentOwner'])
             ->getMock();
+
         $mock_doc_factory    = $this->createMockDocFactory();
         $mock_bucket_factory = $this->createMockBucketFactory();
         $doc_request_id      = 200007;
-        $agentName           = 'john';
+        $agent_entity_id     = 12434300;
+        $agent_id            = 921322;
+        $agent_name          = 'john';
 
         $sut = $this->createSut(
             $mock_strategy,
@@ -189,49 +193,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $mock_strategy
             ->expects($this->once())
-            ->method('setDocumentOwnerName')
-            ->with($doc_request_id, $agentName)
+            ->method('setDocumentOwner')
+            ->with($doc_request_id, $agent_entity_id, $agent_id, $agent_name)
             ->willReturn($mock_return);
 
         $this->assertSame(
             $mock_return,
-            $sut->setDocumentOwnerName($doc_request_id, $agentName)
-        );
-    }
-
-
-    public function testSetOwnerId()
-    {
-        $mock_strategy = $this->getMockBuilder('Lovullo\Liza\Client\MongoClientStrategy')
-            ->disableOriginalConstructor()
-            ->setMethods(['setDocumentOwnerId'])
-            ->getMock();
-
-        $mock_doc_factory    = $this->createMockDocFactory();
-        $mock_bucket_factory = $this->createMockBucketFactory();
-        $doc_request_id      = 200007;
-        $agent_entity_id     = 'AGT12345';
-
-        $sut = $this->createSut(
-            $mock_strategy,
-            $mock_doc_factory,
-            $mock_bucket_factory
-        );
-
-        $mock_return = [
-            'quoteId'  => $doc_request_id,
-            'hasError' => false
-        ];
-
-        $mock_strategy
-            ->expects($this->once())
-            ->method('setDocumentOwnerId')
-            ->with($doc_request_id, $agent_entity_id)
-            ->willReturn($mock_return);
-
-        $this->assertSame(
-            $mock_return,
-            $sut->setDocumentOwnerId($doc_request_id, $agent_entity_id)
+            $sut->setDocumentOwner($doc_request_id, $agent_entity_id, $agent_id, $agent_name)
         );
     }
 
