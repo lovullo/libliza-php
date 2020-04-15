@@ -57,4 +57,19 @@ interface ClientStrategy
      * @return string JSON object
      */
     public function setDocumentData($doc_id, array $data);
+
+
+    /**
+     * Update the document owner fields on a document
+     * These three fields work in conjunction to show ownership of the document
+     * None of these fields should be updated without the others
+     *
+     * @param string  $doc_id          Document id
+     * @param integer $agent_entity_id The entity id
+     * @param integer $agent_id        The owner id
+     * @param string  $agent_name      The owner name
+     *
+     * @return string JSON object
+     */
+    public function setDocumentOwner($doc_id, $entity_id, $agent_id, $agent_name);
 }

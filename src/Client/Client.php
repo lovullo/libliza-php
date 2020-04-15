@@ -125,30 +125,20 @@ class Client
 
 
     /**
-     * Set bucket data for a document
+     * Update the document owner fields on a document
+     * These three fields work in conjunction to show ownership of the document
+     * None of these fields should be updated without the others
      *
-     * @param string $doc_id Document id
-     * @param string $name   The entity's name
-     *
-     * @return string JSON object
-     */
-    public function setDocumentOwnerName($doc_id, $name)
-    {
-        return $this->_strategy->setDocumentOwnerName($doc_id, $name);
-    }
-
-
-    /**
-     * Set bucket data for a document
-     *
-     * @param string $doc_id Document id
-     * @param string $id     The entity's id
+     * @param string  $doc_id          Document id
+     * @param integer $agent_entity_id The entity id
+     * @param integer $agent_id        The owner id
+     * @param string  $agent_name      The owner name
      *
      * @return string JSON object
      */
-    public function setDocumentOwnerId($doc_id, $id)
+    public function setDocumentOwner($doc_id, $entity_id, $agent_id, $agent_name)
     {
-        return $this->_strategy->setDocumentOwnerId($doc_id, $id);
+        return $this->_strategy->setDocumentOwner($doc_id, $entity_id, $agent_id, $agent_name);
     }
 
 

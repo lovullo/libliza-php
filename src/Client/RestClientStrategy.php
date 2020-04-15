@@ -127,30 +127,19 @@ class RestClientStrategy implements ClientStrategy
 
 
     /**
-     * Update the agentName field on a document
+     * Update the document owner fields on a document
+     * These three fields work in conjunction to show ownership of the document
+     * None of these fields should be updated without the others
      *
-     * @param string $doc_id Document id
-     * @param array  $data   The data as an array
-     *
-     * @return string JSON object
-     * @SuppressWarnings(PHPMD)  not implemented yet, satifying interfaces
-     */
-    public function setDocumentOwnerName($doc_id, $owner_name)
-    {
-        throw new NotImplementedException('This feature has not been implemented');
-    }
-
-
-    /**
-     * Update the agentEntityId field on a document
-     *
-     * @param string $doc_id Document id
-     * @param array  $data   The data as an array
+     * @param string  $doc_id          Document id
+     * @param integer $agent_entity_id The entity id
+     * @param integer $agent_id        The owner id
+     * @param string  $agent_name      The owner name
      *
      * @return string JSON object
      * @SuppressWarnings(PHPMD)  not implemented yet, satifying interfaces
      */
-    public function setDocumentOwnerId($doc_id, $owner_name)
+    public function setDocumentOwner($doc_id, $agent_entity_id, $agent_id, $agent_name)
     {
         throw new NotImplementedException('This feature has not been implemented');
     }
