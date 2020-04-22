@@ -72,4 +72,15 @@ interface ClientStrategy
      * @return string JSON object
      */
     public function setDocumentOwner($doc_id, $entity_id, $agent_id, $agent_name);
+
+
+   /**
+     * Set document origin
+     *
+     * @param string $doc_id Document id
+     * @param array  $origin The document origin
+     *
+     * @return string JSON object
+     */
+    public function setDocumentOrigin($doc_id, array $origin);
 }

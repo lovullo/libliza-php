@@ -98,20 +98,21 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     public function gettersDataProvider()
     {
         return [
-            [ [ "agentId" => "fooagentid" ], "fooagentid" ],
-            [ [ "agentId" => "" ], "" ],
-            [ [ "agentName" => "fooagentname" ], "fooagentname" ],
-            [ [ "agentName" => "" ], "" ],
-            [ [ "programId" => "fooprog" ], "fooprog" ],
-            [ [ "programId" => "" ], "" ],
-            [ [ "agentEntityId" => "fooaei" ], "fooaei" ],
-            [ [ "agentEntityId" => "" ], "" ],
+            [ [ "agentId"          => "fooagentid" ], "fooagentid" ],
+            [ [ "agentId"          => "" ], "" ],
+            [ [ "agentName"        => "fooagentname" ], "fooagentname" ],
+            [ [ "agentName"        => "" ], "" ],
+            [ [ "programId"        => "fooprog" ], "fooprog" ],
+            [ [ "programId"        => "" ], "" ],
+            [ [ "agentEntityId"    => "fooaei" ], "fooaei" ],
+            [ [ "agentEntityId"    => "" ], "" ],
             [ [ "initialRatedDate" => "fooird" ], "fooird" ],
             [ [ "initialRatedDate" => "" ], "" ],
-            [ [ "lastPremDate" => "12344321" ], "12344321" ],
-            [ [ "lastPremDate" => "" ], "" ],
-            [ [ "startDate" => "foosd" ], "foosd" ],
-            [ [ "startDate" => "" ], "" ],
+            [ [ "lastPremDate"     => "12344321" ], "12344321" ],
+            [ [ "lastPremDate"     => "" ], "" ],
+            [ [ "startDate"        => "foosd" ], "foosd" ],
+            [ [ "startDate"        => "" ], "" ],
+            [ [ "copyFromQuote"    => "54321" ], "54321" ],
         ];
     }
 
@@ -139,6 +140,8 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [ "getProgramId" ],
+            [ "getCopyFromQuote" ],
+
         ];
     }
 

@@ -292,5 +292,16 @@ namespace Lovullo\Liza\Tests\Client
         {
             $this->createSut()->setDocumentOwner(0, '', '', '');
         }
+
+
+        /**
+        * Overrides unneeded parent test
+        *
+        * @expectedException Lovullo\Liza\Client\NotImplementedException
+        */
+        public function testSetDocumentOriginNotImplemented()
+        {
+            $this->createSut()->setDocumentOrigin(0, []);
+        }
     }
 }

@@ -137,9 +137,20 @@ class RestClientStrategy implements ClientStrategy
      * @param string  $agent_name      The owner name
      *
      * @return string JSON object
-     * @SuppressWarnings(PHPMD)  not implemented yet, satifying interfaces
+     * @SuppressWarnings(PHPMD)  not implemented yet, satisfying interfaces
      */
     public function setDocumentOwner($doc_id, $agent_entity_id, $agent_id, $agent_name)
+    {
+        throw new NotImplementedException('This feature has not been implemented');
+    }
+
+
+    /**
+     * @{inheritdoc}
+     *
+     * @SuppressWarnings(PHPMD)  not implemented yet, satisfying interfaces
+     */
+    public function setDocumentOrigin($doc_id, $origin)
     {
         throw new NotImplementedException('This feature has not been implemented');
     }

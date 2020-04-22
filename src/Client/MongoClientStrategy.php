@@ -92,6 +92,15 @@ class MongoClientStrategy implements ClientStrategy
 
 
     /**
+     * @{inheritdoc}
+     */
+    public function setDocumentOrigin($doc_id, array $origin)
+    {
+        return json_encode($this->_dao->update($doc_id, [ 'meta' => [ 'origin' => $origin ]]));
+    }
+
+
+    /**
      * Update the document owner fields on a document
      * These three fields work in conjunction to show ownership of the document
      * None of these fields should be updated without the others

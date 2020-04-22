@@ -213,6 +213,42 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
     }
 
 
+    public function testItUpdatesTheOrigin()
+    {
+        $quote   = $this->mockQuotes();
+        $program = $this->mockProgram($quote);
+        $mongo   = $this->mockMongo($program);
+        $dao     = $this->mockDao($mongo);
+        $sut     = new Sut($dao);
+
+        $id     = '12345';
+        $origin = [ 'ACORD_UPLOAD' ];
+
+        $data = [
+            'meta' => ['origin' => $origin]
+        ];
+
+        $dao_return = [
+            'ok' => 1,
+            'nModified' => 0,
+            'n' => 0,
+            'err' => null,
+            'errmsg' => null,
+            'updatedExisting' => 1,
+        ];
+
+        $dao->expects($this->once())
+            ->method('update')
+            ->with($id, $data)
+            ->willReturn($dao_return);
+
+        $actual = $sut->setDocumentOrigin($id, $origin);
+        $actual = json_decode($actual, true);
+
+        $this->assertEquals(1, $actual[ 'ok' ]);
+    }
+
+
     /**
     * @expectedException Lovullo\Liza\Client\BadClientDataException
     */

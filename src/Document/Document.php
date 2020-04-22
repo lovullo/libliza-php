@@ -115,7 +115,7 @@ class Document
     /**
      * Get agent identifier
      *
-     * @return string agent id or empty string if unknown
+     * @return string agent id
      */
     public function getAgentId()
     {
@@ -126,7 +126,7 @@ class Document
     /**
      * Get agent entity identifier (i.e. the user id)
      *
-     * @return string agent entity id or empty string if unknown
+     * @return string agent entity id
      */
     public function getAgentEntityId()
     {
@@ -170,11 +170,26 @@ class Document
     /**
      * Get agent name
      *
-     * @return string agent name or empty string if unknown
+     * @return string agent name
      */
     public function getAgentName()
     {
         return $this->getFieldByName("agentName");
+    }
+
+
+    /**
+     * Get copy quote id
+     *
+     * @return string copied from quote_id or empty string if unknown
+     */
+    public function getCopyFromQuote()
+    {
+        try {
+            return (string)$this->getFieldByName("copyFromQuote");
+        } catch (MissingDocumentFieldException $e) {
+            return "";
+        }
     }
 
 
