@@ -150,7 +150,7 @@ class RestClientStrategy implements ClientStrategy
      *
      * @SuppressWarnings(PHPMD)  not implemented yet, satisfying interfaces
      */
-    public function setDocumentOrigin($doc_id, $origin)
+    public function setDocumentOrigin($doc_id, array $origin)
     {
         throw new NotImplementedException('This feature has not been implemented');
     }
