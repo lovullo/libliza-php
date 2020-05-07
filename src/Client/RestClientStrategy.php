@@ -176,8 +176,16 @@ class RestClientStrategy implements ClientStrategy
     {
         $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
 
+        $session_id = $_SESSION[ 'PHPSESSID' ];
+
+        $opts = array(
+            'header' => "Cookie: PHPSESSID=" . $session_id
+        );
+
+        $context = stream_context_create($opts);
+
         return json_decode(
-            file_get_contents($url),
+            file_get_contents($url, false, $context ),
             true
         );
     }
