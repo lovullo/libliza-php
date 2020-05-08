@@ -54,8 +54,8 @@ class RestClientStrategy implements ClientStrategy
     /**
      * Initialize REST client
      *
-     * @param string $base_url base URL for REST endpoint
-     * @param string $skey     Session key
+     * @param string $base_url Base URL for REST endpoint
+     * @param string $skey     Internal session key
      */
     public function __construct($base_url, $skey)
     {
@@ -70,16 +70,16 @@ class RestClientStrategy implements ClientStrategy
      * Until a better API is available, this simply uses the `/init`
      * request, which returns all the data we need.
      *
-     * @param string $doc_id document id
+     * @param string      $doc_id document id
+     * @param string|null $cookie Session cookie
      *
      * @return array document data
      */
-    public function getDocumentData($doc_id)
+    public function getDocumentData($doc_id, $cookie = null)
     {
         $doc_id = (string)$doc_id;
-
         $doc_data = $this->translateDocId(
-            $this->queryDocument($this->_base_url, $doc_id, 'init')
+            $this->queryDocument($this->_base_url, $doc_id, 'init', $cookie)
         );
 
         $this->verifyData($doc_data);
@@ -92,15 +92,16 @@ class RestClientStrategy implements ClientStrategy
      * Retrieve program data for document identified by given id
      *
      * @param string $doc_id document id
+     * @param string|null $cookie Session cookie
      *
      * @return array program data
      */
-    public function getProgramData($doc_id)
+    public function getProgramData($doc_id, $cookie = null)
     {
         $doc_id = (string)$doc_id;
 
         $program_data = $this->translateDocId(
-            $this->queryDocument($this->_base_url, $doc_id, 'progdata')
+            $this->queryDocument($this->_base_url, $doc_id, 'progdata', $cookie)
         );
 
         return $program_data;
@@ -112,17 +113,18 @@ class RestClientStrategy implements ClientStrategy
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array
+     * @param string|null $cookie Session cookie
      *
      * @return string JSON object
      */
-    public function setDocumentData($doc_id, array $data)
+    public function setDocumentData($doc_id, array $data, $cookie = null)
     {
         $doc_id = (string)$doc_id;
 
         $this->verifyData($data[ 'data' ]);
         $data[ 'data' ] = json_encode($data[ 'data' ]);
 
-        return $this->postData($this->_base_url, $doc_id, 'step/1/post', $data);
+        return $this->postData($this->_base_url, $doc_id, 'step/1/post', $data, $cookie);
     }
 
 
@@ -169,23 +171,29 @@ class RestClientStrategy implements ClientStrategy
      * @param string $base_url base URL for REST service
      * @param string $doc_id   id of document to retrieve
      * @param string $endpoint endpoint for REST service
+     * @param string|null $cookie Session cookie
      *
      * @return array document data
      */
-    protected function queryDocument($base_url, $doc_id, $endpoint)
+    protected function queryDocument($base_url, $doc_id, $endpoint, $cookie = null)
     {
-        $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
+        $url  = $base_url . $doc_id . '/' . $endpoint;
+        $url .= (null === $cookie) ? '?skey=' . $this->_skey : '';
 
-        $session_id = $_SESSION[ 'PHPSESSID' ];
+        $http = [
+            'method' => 'GET'
+        ];
 
-        $opts = array(
-            'header' => "Cookie: PHPSESSID=" . $session_id
-        );
+        if (null !== $cookie) {
+            $http['header'] = "Cookie: " . $cookie;
+        }
 
-        $context = stream_context_create($opts);
+        $options = ['http' => $http];
+
+        $context = stream_context_create($options);
 
         return json_decode(
-            file_get_contents($url, false, $context ),
+            file_get_contents($url, false, $context),
             true
         );
     }
@@ -205,22 +213,30 @@ class RestClientStrategy implements ClientStrategy
      * @param string $doc_id   Id of document
      * @param string $endpoint Endpoint for REST service
      * @param array  $data     The data as an array
+     * @param string|null $cookie Session cookie
      *
      * @return string JSON object
      */
-    protected function postData($base_url, $doc_id, $endpoint, $data)
+    protected function postData($base_url, $doc_id, $endpoint, $data, $cookie = null)
     {
-        $url = $base_url . $doc_id . '/' . $endpoint . '?skey=' . $this->_skey;
+        $url  = $base_url . $doc_id . '/' . $endpoint;
+        $url .= (null === $cookie) ? '?skey=' . $this->_skey : '';
 
         $content = http_build_query($data);
-        $options = [
-            'http' => [
-                'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $content,
-                'timeout' => 60
-            ]
+
+        $http = [
+            'method'  => 'POST',
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'content' => $content,
+            'timeout' => 60,
         ];
+
+        if (null !== $cookie) {
+            $http['header'] .= "Cookie: " . $cookie . "\r\n";
+        }
+
+        $options = ['http' => $http];
+
         $context = stream_context_create($options);
 
         return file_get_contents($url, false, $context);

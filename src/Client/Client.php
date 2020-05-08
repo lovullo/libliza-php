@@ -74,14 +74,15 @@ class Client
      * Initialize document data
      *
      * @param string $doc_id document identifier
+     * @param string|null $cookie Session cookie
      *
      * @return array document data
      *
      * @throws BadClientDataException if data are invalid or missing
      */
-    public function getDocumentData($doc_id)
+    public function getDocumentData($doc_id, $cookie = null)
     {
-        return $this->_strategy->getDocumentData($doc_id);
+        return $this->_strategy->getDocumentData($doc_id, $cookie);
     }
 
 
@@ -115,12 +116,13 @@ class Client
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array
+     * @param string|null $cookie Session cookie
      *
      * @return string JSON object
      */
-    public function setDocumentData($doc_id, $data)
+    public function setDocumentData($doc_id, $data, $cookie = null)
     {
-        return $this->_strategy->setDocumentData($doc_id, $data);
+        return $this->_strategy->setDocumentData($doc_id, $data, $cookie);
     }
 
 
@@ -160,14 +162,15 @@ class Client
      * Retrieve program data by given id
      *
      * @param string $doc_id document identifier
+     * @param string|null $cookie Session cookie
      *
      * @return array program data
      *
      * @throws BadClientDataException if program data is invalid or missing
      */
-    public function getProgramData($doc_id)
+    public function getProgramData($doc_id, $cookie = null)
     {
-        $program_data = $this->_strategy->getProgramData($doc_id);
+        $program_data = $this->_strategy->getProgramData($doc_id, $cookie);
 
         if (
             empty($program_data[ 'data' ])

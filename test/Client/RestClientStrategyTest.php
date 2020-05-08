@@ -217,6 +217,38 @@ namespace Lovullo\Liza\Tests\Client
         }
 
 
+        public function testDocumentRequestsBaseUrlWithIdInitAndCookie()
+        {
+            global $file_get_contents_url,
+            $file_get_contents_ret;
+
+            $cookie = 'foo=bar';
+
+            $url = 'https://foo/document/';
+            $id  = 'FOO123';
+
+            // no mocking at all now
+            $skey = 'testfookey123';
+            $sut  = new Sut($url, $skey);
+
+            $dummy_data = $this->getDummyData();
+            $dummy_data[ 'worked' ] = 'ok';
+
+            // the test will fail unless this JSON-decodes into an array
+            $file_get_contents_ret = json_encode($dummy_data);
+
+            // see mock file_get_contents at top of this file
+            $result = $sut->getDocumentData($id, $cookie);
+
+            $this->assertEquals(
+                $url . $id . '/init',
+                $file_get_contents_url
+            );
+
+            $this->assertArrayHasKey('worked', $result);
+        }
+
+
         public function testGetProgramDataRequestsBaseUrlWithIdAndProgData()
         {
             global $file_get_contents_url,
@@ -240,6 +272,38 @@ namespace Lovullo\Liza\Tests\Client
 
             $this->assertEquals(
                 $url . $id . '/progdata?skey=' . $skey,
+                $file_get_contents_url
+            );
+
+            $this->assertArrayHasKey('worked', $result);
+        }
+
+
+        public function testGetProgramDataRequestsBaseUrlWithIdAndProgDataWithCookie()
+        {
+            global $file_get_contents_url,
+            $file_get_contents_ret;
+
+            $cookie = 'foo=bar';
+
+            $url = 'https://foo/document/';
+            $id  = 'FOO456';
+
+            // no mocking at all now
+            $skey = 'testkey456';
+            $sut  = new Sut($url, $skey);
+
+            $dummy_data = $this->getDummyData();
+            $dummy_data[ 'worked' ] = 'ok';
+
+            // the test will fail unless this JSON-decodes into an array
+            $file_get_contents_ret = json_encode($dummy_data);
+
+            // see mock file_get_contents at top of this file
+            $result = $sut->getProgramData($id, $cookie);
+
+            $this->assertEquals(
+                $url . $id . '/progdata',
                 $file_get_contents_url
             );
 
@@ -276,6 +340,44 @@ namespace Lovullo\Liza\Tests\Client
 
             $this->assertEquals(
                 $url . $id . '/step/1/post?skey=' . $skey,
+                $file_get_contents_url
+            );
+
+            $this->assertArrayHasKey('worked', json_decode($result, true));
+        }
+
+
+        public function testPostProgramDataRequestsBaseUrlWithIdAndProgDataWithCookie()
+        {
+            global $file_get_contents_url,
+                   $file_get_contents_ret;
+
+            $cookie = 'foo=bar';
+
+            $url = 'https://foo/document/';
+            $id  = 'FOO456';
+
+            // no mocking at all now
+            $skey = 'testkey456';
+            $sut  = new Sut($url, $skey);
+
+            $dummy_data = $this->getDummyData();
+            $dummy_data[ 'worked' ] = 'ok';
+
+            $data = [ 'id' => $id ];
+            $parameters  = [
+                'data'            => $data,
+                'concluding_save' => false
+            ];
+
+            // the test will fail unless this JSON-decodes into an array
+            $file_get_contents_ret = json_encode($dummy_data);
+
+            // see mock file_get_contents at top of this file
+            $result = $sut->setDocumentData($id, $parameters, $cookie);
+
+            $this->assertEquals(
+                $url . $id . '/step/1/post',
                 $file_get_contents_url
             );
 
