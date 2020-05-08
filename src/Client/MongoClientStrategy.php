@@ -52,12 +52,11 @@ class MongoClientStrategy implements ClientStrategy
      * Retrieve data for document identified by given id
      *
      * @param string $doc_id document id
-     * @param string|null $cookie Session cookie
      *
      * @return array document data
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function getDocumentData($doc_id, $cookie = null)
+    public function getDocumentData($doc_id)
     {
         throw new NotImplementedException('This method has not been implemented');
     }
@@ -67,12 +66,11 @@ class MongoClientStrategy implements ClientStrategy
      * Retrieve program, data for document identified by given id
      *
      * @param string $doc_id document id
-     * @param string|null $cookie Session cookie
      *
      * @return array program data
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function getProgramData($doc_id, $cookie = null)
+    public function getProgramData($doc_id)
     {
         throw new NotImplementedException('This method has not been implemented');
     }
@@ -83,12 +81,11 @@ class MongoClientStrategy implements ClientStrategy
      *
      * @param string $doc_id Document id
      * @param array  $data   The data as an array
-     * @param string|null $cookie Session cookie
      *
      * @return string JSON object
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function setDocumentData($doc_id, array $data, $cookie = null)
+    public function setDocumentData($doc_id, array $data)
     {
         throw new NotImplementedException('This method has not been implemented');
     }
