@@ -46,9 +46,9 @@ namespace Lovullo\Liza\Tests\Client
 
     class RestClientStrategyTest extends ClientStrategyTestCase
     {
-        protected function createSut()
+        protected function createSut($cookie = false)
         {
-            $sut = $this->createPlainSut('https://base', 'foo');
+            $sut = $this->createPlainSut('https://base', 'foo', $cookie);
 
             // valid data for test case supertype
             $sut->method('queryDocument')
@@ -61,12 +61,12 @@ namespace Lovullo\Liza\Tests\Client
         /**
          * Create SUT without setting up default mocks
          */
-        protected function createPlainSut($base_url, $skey = 'fookey')
+        protected function createPlainSut($base_url, $skey = 'fookey', $cookie = false)
         {
             return $this->getMockBuilder(
                 'Lovullo\Liza\Client\RestClientStrategy'
             )
-            ->setConstructorArgs(array( $base_url, $skey ))
+            ->setConstructorArgs(array( $base_url, $skey, $cookie ))
             ->setMethods(array( 'queryDocument' ))
             ->getMock();
         }
@@ -229,7 +229,7 @@ namespace Lovullo\Liza\Tests\Client
 
             // no mocking at all now
             $skey = 'testfookey123';
-            $sut  = new Sut($url, $skey);
+            $sut  = new Sut($url, $skey, $cookie);
 
             $dummy_data = $this->getDummyData();
             $dummy_data[ 'worked' ] = 'ok';
@@ -238,7 +238,7 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->getDocumentData($id, $cookie);
+            $result = $sut->getDocumentData($id);
 
             $this->assertEquals(
                 $url . $id . '/init',
@@ -278,7 +278,6 @@ namespace Lovullo\Liza\Tests\Client
             $this->assertArrayHasKey('worked', $result);
         }
 
-
         public function testGetProgramDataRequestsBaseUrlWithIdAndProgDataWithCookie()
         {
             global $file_get_contents_url,
@@ -291,7 +290,7 @@ namespace Lovullo\Liza\Tests\Client
 
             // no mocking at all now
             $skey = 'testkey456';
-            $sut  = new Sut($url, $skey);
+            $sut  = new Sut($url, $skey, $cookie);
 
             $dummy_data = $this->getDummyData();
             $dummy_data[ 'worked' ] = 'ok';
@@ -300,7 +299,7 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->getProgramData($id, $cookie);
+            $result = $sut->getProgramData($id);
 
             $this->assertEquals(
                 $url . $id . '/progdata',
@@ -359,7 +358,7 @@ namespace Lovullo\Liza\Tests\Client
 
             // no mocking at all now
             $skey = 'testkey456';
-            $sut  = new Sut($url, $skey);
+            $sut  = new Sut($url, $skey, $cookie);
 
             $dummy_data = $this->getDummyData();
             $dummy_data[ 'worked' ] = 'ok';
@@ -374,7 +373,7 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->setDocumentData($id, $parameters, $cookie);
+            $result = $sut->setDocumentData($id, $parameters);
 
             $this->assertEquals(
                 $url . $id . '/step/1/post',
