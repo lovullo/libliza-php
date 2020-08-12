@@ -96,7 +96,7 @@ class MongoClientStrategy implements ClientStrategy
      */
     public function setDocumentOrigin($doc_id, array $origin)
     {
-        return json_encode($this->_dao->update($doc_id, [ 'meta' => [ 'origin' => $origin ]]));
+        return json_encode($this->_dao->update($doc_id, [ 'meta.origin' => $origin ]));
     }
 
 

@@ -224,9 +224,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $id     = '12345';
         $origin = [ 'ACORD_UPLOAD' ];
 
-        $data = [
-            'meta' => ['origin' => $origin]
-        ];
+        $data = [ 'meta.origin' => $origin ];
 
         $dao_return = [
             'ok' => 1,
