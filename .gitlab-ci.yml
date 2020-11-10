@@ -1,4 +1,4 @@
-image: lovullo/php-ci
+image: $CI_REGISTRY/devops/docker-php-ci:latest
 
 include:
     - project: 'devops/shared-pipelines'
