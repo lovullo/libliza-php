@@ -182,14 +182,16 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $sut     = new Sut($dao);
 
         $id              = '12345';
-        $agent_entity_id = 12434300;
-        $agent_id        = 921322;
+        $agent_entity_id = '12434300';
+        $agent_id        = '921322';
         $agent_name      = 'john';
+        $retail_agency   = 'AGT36409';
 
         $data = [
-            'agentEntityId' => $agent_entity_id,
-            'agentId'       => $agent_id,
-            'agentName'     => $agent_name,
+            'agentEntityId'      => $agent_entity_id,
+            'agentId'            => $agent_id,
+            'agentName'          => $agent_name,
+            'meta.retail_agency' => [ $retail_agency ]
         ];
 
         $dao_return = [
@@ -206,7 +208,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
             ->with($id, $data)
             ->willReturn($dao_return);
 
-        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name);
+        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name, $retail_agency);
         $actual = json_decode($actual, true);
 
         $this->assertEquals(1, $actual[ 'ok' ]);
@@ -262,7 +264,9 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $agent_entity_id = 'x12434300';
         $agent_id        = 921322;
         $agent_name      = 'john';
+        $retail_agency   = 'AGT36409';
 
-        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name);
+
+        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name, $retail_agency);
     }
 }

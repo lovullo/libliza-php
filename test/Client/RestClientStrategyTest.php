@@ -391,7 +391,7 @@ namespace Lovullo\Liza\Tests\Client
         */
         public function testSetDocumentOwnerNotImplemented()
         {
-            $this->createSut()->setDocumentOwner(0, '', '', '');
+            $this->createSut()->setDocumentOwner(0, '', '', '', '');
         }
 
 
