@@ -101,29 +101,24 @@ class MongoClientStrategy implements ClientStrategy
 
 
     /**
-     * Update the document owner fields on a document
-     * These three fields work in conjunction to show ownership of the document
-     * None of these fields should be updated without the others
-     *
-     * @param string  $doc_id          Document id
-     * @param integer $agent_entity_id The entity id
-     * @param integer $agent_id        The owner id
-     * @param string  $agent_name      The owner name
-     *
-     * @return string JSON object
-     *
-     * @throws BadClientDataException
+     * @{inheritdoc}
      */
-    public function setDocumentOwner($doc_id, $agent_entity_id, $agent_id, $agent_name)
-    {
+    public function setDocumentOwner(
+        int $doc_id,
+        string $agent_entity_id,
+        string $agent_id,
+        string $agent_name,
+        string $retail_agency
+    ) {
         if (!is_numeric($agent_entity_id)) {
             throw new BadClientDataException('Entity ID must be numeric');
         }
 
         return json_encode($this->_dao->update($doc_id, [
-            'agentEntityId' => (int)$agent_entity_id,
-            'agentId'       => (string)$agent_id,
-            'agentName'     => (string)$agent_name,
+            'agentEntityId'      => $agent_entity_id,
+            'agentId'            => $agent_id,
+            'agentName'          => $agent_name,
+            'meta.retail_agency' => [ $retail_agency ]
         ]));
     }
 }
