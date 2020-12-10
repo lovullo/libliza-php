@@ -180,6 +180,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $agent_id            = 921322;
         $agent_name          = 'john';
         $retail_agency       = 'AGT36409';
+        $access_groups       = [ 'foo' ];
 
         $sut = $this->createSut(
             $mock_strategy,
@@ -195,12 +196,26 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $mock_strategy
             ->expects($this->once())
             ->method('setDocumentOwner')
-            ->with($doc_request_id, $agent_entity_id, $agent_id, $agent_name, $retail_agency)
+            ->with(
+                $doc_request_id,
+                $agent_entity_id,
+                $agent_id,
+                $agent_name,
+                $retail_agency,
+                $access_groups
+            )
             ->willReturn($mock_return);
 
         $this->assertSame(
             $mock_return,
-            $sut->setDocumentOwner($doc_request_id, $agent_entity_id, $agent_id, $agent_name, $retail_agency)
+            $sut->setDocumentOwner(
+                $doc_request_id,
+                $agent_entity_id,
+                $agent_id,
+                $agent_name,
+                $retail_agency,
+                $access_groups
+            )
         );
     }
 

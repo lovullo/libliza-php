@@ -145,6 +145,7 @@ class RestClientStrategy implements ClientStrategy
      * @param string $agent_id        The owner id
      * @param string $agent_name      The owner name
      * @param string $retail_agency   The retail agency
+     * @param array  $access_groups   The visibility groups
      *
      * @return string JSON object
      * @SuppressWarnings(PHPMD)  not implemented yet, satisfying interfaces
@@ -154,7 +155,8 @@ class RestClientStrategy implements ClientStrategy
         string $agent_entity_id,
         string $agent_id,
         string $agent_name,
-        string $retail_agency
+        string $retail_agency,
+        array $access_groups
     ) {
         throw new NotImplementedException('This feature has not been implemented');
     }
