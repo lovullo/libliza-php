@@ -23,6 +23,8 @@
 
 namespace Lovullo\Liza\Bucket;
 
+use DomainException;
+
 /**
  * Generalized key/value store
  *
@@ -101,7 +103,7 @@ class ImmutableBucket implements Bucket
 
         // if the data is not an array, then there is a problem somewhere
         if (is_array($data) === false) {
-            throw new \DomainException(
+            throw new DomainException(
                 sprintf('Data integrity failure: %s', $name)
             );
         }
@@ -112,7 +114,7 @@ class ImmutableBucket implements Bucket
             ( $index !== null )
             && ( array_key_exists($index, $data) === false )
         ) {
-            throw new \DomainException(
+            throw new DomainException(
                 sprintf(
                     'Requested index %d for %s does not exist; have %d values',
                     $index,

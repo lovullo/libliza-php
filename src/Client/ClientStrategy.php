@@ -69,6 +69,7 @@ interface ClientStrategy
      * @param string $agent_id        The owner id
      * @param string $agent_name      The owner name
      * @param string $retail_agency   The retail agency
+     * @param array  $access_groups   The visibility groups
      *
      * @return string JSON object
      */
@@ -77,7 +78,8 @@ interface ClientStrategy
         string $agent_entity_id,
         string $agent_id,
         string $agent_name,
-        string $retail_agency
+        string $retail_agency,
+        array $access_groups
     );
 
 

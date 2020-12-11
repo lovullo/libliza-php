@@ -24,6 +24,7 @@
 namespace Lovullo\Liza\Bucket\Formatter;
 
 use Lovullo\Liza\Bucket\Bucket;
+use SimpleXmlElement;
 
 /**
  * Builds XML from a Bucket using a convenient syntax
@@ -232,7 +233,7 @@ class XmlBucketFormatter implements BucketFormatter
 
         // if no node exists, create the root node
         if ($xml === null) {
-            $node = $xml = new \SimpleXmlElement("<$name />");
+            $node = $xml = new SimpleXmlElement("<$name />");
         } else {
             $node = $xml->addChild($name);
         }
@@ -273,6 +274,8 @@ class XmlBucketFormatter implements BucketFormatter
      */
     protected function bucketLookup($value)
     {
+        $data = [];
+
         preg_match('/^:(.*?)(?:\[([0-9]+)\])?$/', $value, $data);
 
         $bname = $data[ 1 ];

@@ -186,12 +186,14 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $agent_id        = '921322';
         $agent_name      = 'john';
         $retail_agency   = 'AGT36409';
+        $access_groups   = [ 'foo' ];
 
         $data = [
-            'agentEntityId'      => $agent_entity_id,
-            'agentId'            => $agent_id,
-            'agentName'          => $agent_name,
-            'meta.retail_agency' => [ $retail_agency ]
+            'agentEntityId'           => $agent_entity_id,
+            'agentId'                 => $agent_id,
+            'agentName'               => $agent_name,
+            'meta.retail_agency'      => [ $retail_agency ],
+            'meta.liza_access_groups' => [ 'foo' ]
         ];
 
         $dao_return = [
@@ -208,7 +210,14 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
             ->with($id, $data)
             ->willReturn($dao_return);
 
-        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name, $retail_agency);
+        $actual = $sut->setDocumentOwner(
+            $id,
+            $agent_entity_id,
+            $agent_id,
+            $agent_name,
+            $retail_agency,
+            $access_groups
+        );
         $actual = json_decode($actual, true);
 
         $this->assertEquals(1, $actual[ 'ok' ]);
@@ -265,8 +274,16 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $agent_id        = 921322;
         $agent_name      = 'john';
         $retail_agency   = 'AGT36409';
+        $access_groups   = [ 'foo' ];
 
 
-        $actual = $sut->setDocumentOwner($id, $agent_entity_id, $agent_id, $agent_name, $retail_agency);
+        $actual = $sut->setDocumentOwner(
+            $id,
+            $agent_entity_id,
+            $agent_id,
+            $agent_name,
+            $retail_agency,
+            $access_groups
+        );
     }
 }
