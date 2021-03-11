@@ -105,21 +105,9 @@ class MongoClientStrategy implements ClientStrategy
      */
     public function setDocumentOwner(
         int $doc_id,
-        string $agent_entity_id,
-        string $agent_id,
-        string $agent_name,
-        string $retail_agency,
         array $access_groups
     ) {
-        if (!is_numeric($agent_entity_id)) {
-            throw new BadClientDataException('Entity ID must be numeric');
-        }
-
         return json_encode($this->_dao->update($doc_id, [
-            'agentEntityId'           => $agent_entity_id,
-            'agentId'                 => $agent_id,
-            'agentName'               => $agent_name,
-            'meta.retail_agency'      => [ $retail_agency ],
             'meta.liza_access_groups' => $access_groups
         ]));
     }

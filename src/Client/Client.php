@@ -144,28 +144,16 @@ class Client
      * None of these fields should be updated without the others
      *
      * @param int    $doc_id          Document id
-     * @param string $agent_entity_id The entity id
-     * @param string $agent_id        The owner id
-     * @param string $agent_name      The owner name
-     * @param string $retail_agency   The retail agency
      * @param array  $access_groups   The visibility groups
      *
      * @return string JSON object
      */
     public function setDocumentOwner(
         int $doc_id,
-        string $agent_entity_id,
-        string $agent_id,
-        string $agent_name,
-        string $retail_agency,
         array $access_groups
     ) {
         return $this->_strategy->setDocumentOwner(
             $doc_id,
-            $agent_entity_id,
-            $agent_id,
-            $agent_name,
-            $retail_agency,
             $access_groups
         );
     }

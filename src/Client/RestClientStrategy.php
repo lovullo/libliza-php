@@ -141,10 +141,6 @@ class RestClientStrategy implements ClientStrategy
      * None of these fields should be updated without the others
      *
      * @param int    $doc_id          Document id
-     * @param string $agent_entity_id The entity id
-     * @param string $agent_id        The owner id
-     * @param string $agent_name      The owner name
-     * @param string $retail_agency   The retail agency
      * @param array  $access_groups   The visibility groups
      *
      * @return string JSON object
@@ -152,10 +148,6 @@ class RestClientStrategy implements ClientStrategy
      */
     public function setDocumentOwner(
         int $doc_id,
-        string $agent_entity_id,
-        string $agent_id,
-        string $agent_name,
-        string $retail_agency,
         array $access_groups
     ) {
         throw new NotImplementedException('This feature has not been implemented');

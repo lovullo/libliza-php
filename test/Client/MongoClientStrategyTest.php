@@ -182,17 +182,9 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $sut     = new Sut($dao);
 
         $id              = '12345';
-        $agent_entity_id = '12434300';
-        $agent_id        = '921322';
-        $agent_name      = 'john';
-        $retail_agency   = 'AGT36409';
         $access_groups   = [ 'foo' ];
 
         $data = [
-            'agentEntityId'           => $agent_entity_id,
-            'agentId'                 => $agent_id,
-            'agentName'               => $agent_name,
-            'meta.retail_agency'      => [ $retail_agency ],
             'meta.liza_access_groups' => [ 'foo' ]
         ];
 
@@ -212,10 +204,6 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
 
         $actual = $sut->setDocumentOwner(
             $id,
-            $agent_entity_id,
-            $agent_id,
-            $agent_name,
-            $retail_agency,
             $access_groups
         );
         $actual = json_decode($actual, true);
@@ -255,35 +243,5 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
         $actual = json_decode($actual, true);
 
         $this->assertEquals(1, $actual[ 'ok' ]);
-    }
-
-
-    /**
-    * @expectedException Lovullo\Liza\Client\BadClientDataException
-    */
-    public function testUpdateOwnerIdThrowsBadDataException()
-    {
-        $quote   = $this->mockQuotes();
-        $program = $this->mockProgram($quote);
-        $mongo   = $this->mockMongo($program);
-        $dao     = $this->mockDao($mongo);
-        $sut     = new Sut($dao);
-
-        $id              = '12345';
-        $agent_entity_id = 'x12434300';
-        $agent_id        = 921322;
-        $agent_name      = 'john';
-        $retail_agency   = 'AGT36409';
-        $access_groups   = [ 'foo' ];
-
-
-        $actual = $sut->setDocumentOwner(
-            $id,
-            $agent_entity_id,
-            $agent_id,
-            $agent_name,
-            $retail_agency,
-            $access_groups
-        );
     }
 }
