@@ -183,9 +183,11 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
 
         $id              = '12345';
         $access_groups   = [ 'foo' ];
+        $agent_email     = 'foo@example.com';
 
         $data = [
-            'meta.liza_access_groups' => [ 'foo' ]
+            'meta.liza_access_groups' => $access_groups,
+            'meta.liza_access_email' => [ $agent_email ],
         ];
 
         $dao_return = [
@@ -204,7 +206,8 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
 
         $actual = $sut->setDocumentOwner(
             $id,
-            $access_groups
+            $access_groups,
+            $agent_email
         );
         $actual = json_decode($actual, true);
 

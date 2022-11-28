@@ -66,12 +66,14 @@ interface ClientStrategy
      *
      * @param int    $doc_id          Document id
      * @param array  $access_groups   The visibility groups
+     * @param string $agent_email     The email address of the agent
      *
      * @return string JSON object
      */
     public function setDocumentOwner(
         int $doc_id,
-        array $access_groups
+        array $access_groups,
+        string $agent_email
     );
 
 

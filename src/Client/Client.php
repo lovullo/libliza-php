@@ -145,16 +145,19 @@ class Client
      *
      * @param int    $doc_id          Document id
      * @param array  $access_groups   The visibility groups
+     * @param string $agent_email     The email address of the agent
      *
      * @return string JSON object
      */
     public function setDocumentOwner(
         int $doc_id,
-        array $access_groups
+        array $access_groups,
+        string $agent_email
     ) {
         return $this->_strategy->setDocumentOwner(
             $doc_id,
-            $access_groups
+            $access_groups,
+            $agent_email
         );
     }
 
