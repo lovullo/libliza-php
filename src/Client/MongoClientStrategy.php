@@ -105,10 +105,12 @@ class MongoClientStrategy implements ClientStrategy
      */
     public function setDocumentOwner(
         int $doc_id,
-        array $access_groups
+        array $access_groups,
+        string $agent_email
     ) {
         return json_encode($this->_dao->update($doc_id, [
-            'meta.liza_access_groups' => $access_groups
+            'meta.liza_access_groups' => $access_groups,
+            'meta.liza_access_email' => [$agent_email],
         ]));
     }
 }

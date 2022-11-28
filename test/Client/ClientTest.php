@@ -177,6 +177,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $mock_bucket_factory = $this->createMockBucketFactory();
         $doc_request_id      = 200007;
         $access_groups       = [ 'foo' ];
+        $agent_email         = 'foo@example.com';
 
         $sut = $this->createSut(
             $mock_strategy,
@@ -194,7 +195,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('setDocumentOwner')
             ->with(
                 $doc_request_id,
-                $access_groups
+                $access_groups,
+                $agent_email
             )
             ->willReturn($mock_return);
 
@@ -202,7 +204,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $mock_return,
             $sut->setDocumentOwner(
                 $doc_request_id,
-                $access_groups
+                $access_groups,
+                $agent_email
             )
         );
     }

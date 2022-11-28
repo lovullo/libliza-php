@@ -136,19 +136,14 @@ class RestClientStrategy implements ClientStrategy
 
 
     /**
-     * Update the document owner fields on a document
-     * These three fields work in conjunction to show ownership of the document
-     * None of these fields should be updated without the others
+     * @{inheritdoc}
      *
-     * @param int    $doc_id          Document id
-     * @param array  $access_groups   The visibility groups
-     *
-     * @return string JSON object
      * @SuppressWarnings(PHPMD)  not implemented yet, satisfying interfaces
      */
     public function setDocumentOwner(
         int $doc_id,
-        array $access_groups
+        array $access_groups,
+        string $agent_email
     ) {
         throw new NotImplementedException('This feature has not been implemented');
     }
