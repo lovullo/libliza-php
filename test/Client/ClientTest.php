@@ -103,6 +103,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $mock_doc_factory    = $this->createMockDocFactory();
         $mock_bucket_factory = $this->createMockBucketFactory();
         $doc_request_id      = '0';
+        $doc_program         = 'foo';
 
         $sut = $this->createSut(
             $mock_strategy,
@@ -119,12 +120,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $mock_strategy
             ->expects($this->once())
             ->method('getDocumentData')
-            ->with($doc_request_id)
+            ->with($doc_request_id, $doc_program)
             ->willReturn($mock_return);
 
         $this->assertSame(
             $mock_return,
-            $sut->getDocumentData($doc_request_id)
+            $sut->getDocumentData($doc_request_id, $doc_program)
         );
     }
 
@@ -260,6 +261,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         );
 
         $doc_request_id   = 'REQUESTID';
+        $doc_program      = 'foo';
         $doc_id           = 'FOO123';
         $bucket_data      = array( 'bucket' => 'data' );
         $meta_bucket_data = array( 'foo' => 'bar' );
@@ -278,7 +280,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $mock_strategy
             ->expects($this->once())
             ->method('getDocumentData')
-            ->with($doc_request_id)
+            ->with($doc_request_id, $doc_program)
             ->willReturn($doc_data);
 
         $mock_bucket_factory
@@ -303,7 +305,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         // end is the one returned by the server, not the one we provide
         $this->assertSame(
             $document,
-            $sut->getDocument($doc_request_id)
+            $sut->getDocument($doc_request_id, $doc_program)
         );
     }
 
@@ -332,7 +334,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "/Invalid or missing bucket data/"
         );
 
-        $sut->getDocument(0);
+        $sut->getDocument('0', 'foo_program');
     }
 
 
@@ -360,7 +362,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "/Invalid or missing content data/"
         );
 
-        $sut->getDocument(0);
+        $sut->getDocument('0', 'foo_program');
     }
 
 
@@ -388,7 +390,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "/Invalid or missing bucket data/"
         );
 
-        $sut->getDocument(0);
+        $sut->getDocument('0', 'foo_program');
     }
 
 
@@ -417,7 +419,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "/Invalid or missing meta data/"
         );
 
-        $sut->getDocument(0);
+        $sut->getDocument('0', 'foo_program');
     }
 
 
@@ -433,7 +435,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $mock_bucket_factory
         );
 
-        $doc_id = 'FOO123';
+        $doc_id      = 'FOO123';
+        $doc_program = 'foo_program';
 
         $expected = [ 'foo' => 'bar' ];
 
@@ -445,10 +448,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $mock_strategy
             ->expects($this->once())
             ->method('getProgramData')
-            ->with($doc_id)
+            ->with($doc_id, $doc_program)
             ->willReturn($doc_data);
 
-        $given = $sut->getProgramData($doc_id);
+        $given = $sut->getProgramData($doc_id, $doc_program);
 
         $this->assertEquals($expected, $given);
     }
@@ -479,6 +482,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             "/Invalid or missing program data/"
         );
 
-        $sut->getProgramData($doc_id);
+        $sut->getProgramData($doc_id, 'foo_program');
     }
 }

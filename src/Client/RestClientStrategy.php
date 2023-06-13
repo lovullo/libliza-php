@@ -79,16 +79,17 @@ class RestClientStrategy implements ClientStrategy
      * Until a better API is available, this simply uses the `/init`
      * request, which returns all the data we need.
      *
-     * @param string $doc_id document id
+     * @param string $doc_id  document id
+     * @param string $program program id
      *
      * @return array document data
      */
-    public function getDocumentData($doc_id)
+    public function getDocumentData(string $doc_id, string $program)
     {
         $doc_id = (string)$doc_id;
 
         $doc_data = $this->translateDocId(
-            $this->queryDocument($this->_base_url, $doc_id, 'init')
+            $this->queryDocument($this->_base_url, $program, $doc_id, 'init')
         );
 
         $this->verifyData($doc_data);
@@ -100,16 +101,17 @@ class RestClientStrategy implements ClientStrategy
     /**
      * Retrieve program data for document identified by given id
      *
-     * @param string $doc_id document id
+     * @param string $doc_id  document id
+     * @param string $program program id
      *
      * @return array program data
      */
-    public function getProgramData($doc_id)
+    public function getProgramData(string $doc_id, string $program)
     {
         $doc_id = (string)$doc_id;
 
         $program_data = $this->translateDocId(
-            $this->queryDocument($this->_base_url, $doc_id, 'progdata')
+            $this->queryDocument($this->_base_url, $program, $doc_id, 'progdata')
         );
 
         return $program_data;
@@ -171,14 +173,15 @@ class RestClientStrategy implements ClientStrategy
      * No trailing slash will be added to $base_url.
      *
      * @param string $base_url base URL for REST service
+     * @param string $program  program id
      * @param string $doc_id   id of document to retrieve
      * @param string $endpoint endpoint for REST service
      *
      * @return array document data
      */
-    protected function queryDocument($base_url, $doc_id, $endpoint)
+    protected function queryDocument($base_url, $program, $doc_id, $endpoint)
     {
-        $url  = $base_url . $doc_id . '/' . $endpoint;
+        $url  = $base_url . $program . '/' . $doc_id . '/' . $endpoint;
         $url .= (null === $this->_cookie) ? '?skey=' . $this->_skey : '';
 
         $http = [

@@ -73,30 +73,32 @@ class Client
     /**
      * Initialize document data
      *
-     * @param string $doc_id document identifier
+     * @param string $doc_id     document identifier
+     * @param string $program_id program identifier
      *
      * @return array document data
      *
      * @throws BadClientDataException if data are invalid or missing
      */
-    public function getDocumentData($doc_id)
+    public function getDocumentData($doc_id, $program_id)
     {
-        return $this->_strategy->getDocumentData($doc_id);
+        return $this->_strategy->getDocumentData($doc_id, $program_id);
     }
 
 
     /**
      * Retrieve document by given id
      *
-     * @param string  $doc_id document identifier
+     * @param string  $doc_id     document identifier
+     * @param string  $program_id program identifier
      *
      * @return Document
      *
      * @throws BadClientDataException if data are invalid or missing
      */
-    public function getDocument($doc_id)
+    public function getDocument($doc_id, $program_id)
     {
-        $doc_data = $this->getDocumentData($doc_id);
+        $doc_data = $this->getDocumentData($doc_id, $program_id);
 
         return $this->_doc_factory->fromData(
             $doc_data,
@@ -165,15 +167,16 @@ class Client
     /**
      * Retrieve program data by given id
      *
-     * @param string $doc_id document identifier
+     * @param string $doc_id     document identifier
+     * @param string $program_id program identifier
      *
      * @return array program data
      *
      * @throws BadClientDataException if program data is invalid or missing
      */
-    public function getProgramData($doc_id)
+    public function getProgramData($doc_id, $program_id)
     {
-        $program_data = $this->_strategy->getProgramData($doc_id);
+        $program_data = $this->_strategy->getProgramData($doc_id, $program_id);
 
         if (
             empty($program_data[ 'data' ])

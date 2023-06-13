@@ -42,7 +42,7 @@ abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
     public function testGetDocumentDataReturnsAnArray()
     {
         $this->assertTrue(
-            is_array($this->createSut()->getDocumentData(0))
+            is_array($this->createSut()->getDocumentData('0', 'foo_program'))
         );
     }
 
@@ -55,7 +55,7 @@ abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
      */
     public function testGetDocumentDataContainsDocumentId()
     {
-        $given = $this->createSut()->getDocumentData(0);
+        $given = $this->createSut()->getDocumentData('0', 'foo_program');
 
         $this->assertArrayHasKey('id', $given);
     }
@@ -66,7 +66,7 @@ abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
      */
     public function testGetDocumentDataContainsKeyValueStoreData()
     {
-        $given = $this->createSut()->getDocumentData(0);
+        $given = $this->createSut()->getDocumentData('0', 'foo_program');
 
         $this->assertArrayHasKey('data', $given);
         $this->assertTrue(is_array($given));
@@ -76,7 +76,7 @@ abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
     public function testGetProgramDataReturnsAnArray()
     {
         $this->assertTrue(
-            is_array($this->createSut()->getProgramData(0))
+            is_array($this->createSut()->getProgramData('0', 'foo_program'))
         );
     }
 
@@ -89,7 +89,7 @@ abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
      */
     public function testGetProgramDataContainsDocumentId()
     {
-        $given = $this->createSut()->getProgramData(0);
+        $given = $this->createSut()->getProgramData('0', 'foo_program');
 
         $this->assertArrayHasKey('id', $given);
     }
@@ -100,7 +100,7 @@ abstract class ClientStrategyTestCase extends \PHPUnit_Framework_TestCase
      */
     public function testGetProgramDataContainsKeyValueStoreData()
     {
-        $given = $this->createSut()->getProgramData(0);
+        $given = $this->createSut()->getProgramData('0', 'foo_program');
 
         $this->assertArrayHasKey('data', $given);
         $this->assertTrue(is_array($given));

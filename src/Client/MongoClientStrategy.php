@@ -56,7 +56,7 @@ class MongoClientStrategy implements ClientStrategy
      * @return array document data
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function getDocumentData($doc_id)
+    public function getDocumentData(string $doc_id, string $program)
     {
         throw new NotImplementedException('This method has not been implemented');
     }
@@ -70,7 +70,7 @@ class MongoClientStrategy implements ClientStrategy
      * @return array program data
      * @throws \Lovullo\Liza\Client\NotImplementedException
      */
-    public function getProgramData($doc_id)
+    public function getProgramData(string $doc_id, string $program)
     {
         throw new NotImplementedException('This method has not been implemented');
     }

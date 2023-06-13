@@ -31,21 +31,23 @@ interface ClientStrategy
     /**
      * Retrieve data for document identified by given id
      *
-     * @param string $doc_id document id
+     * @param string $doc_id  document id
+     * @param string $program program id
      *
      * @return array document data
      */
-    public function getDocumentData($doc_id);
+    public function getDocumentData(string $doc_id, string $program);
 
 
     /**
      * Retrieve program, data for document identified by given id
      *
-     * @param string $doc_id document id
+     * @param string $doc_id  document id
+     * @param string $program program id
      *
      * @return array program data
      */
-    public function getProgramData($doc_id);
+    public function getProgramData(string $doc_id, string $program);
 
 
     /**
