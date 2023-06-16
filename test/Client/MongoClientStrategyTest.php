@@ -103,7 +103,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
      */
     public function testGetDocumentDataReturnsAnArray()
     {
-        $this->createSut()->getDocumentData(0);
+        $this->createSut()->getDocumentData('0', 'foo_program');
     }
 
 
@@ -114,7 +114,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
      */
     public function testGetDocumentDataContainsDocumentId()
     {
-        $this->createSut()->getDocumentData(0);
+        $this->createSut()->getDocumentData('0', 'foo_program');
     }
 
 
@@ -125,7 +125,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
      */
     public function testGetDocumentDataContainsKeyValueStoreData()
     {
-        $this->createSut()->getDocumentData(0);
+        $this->createSut()->getDocumentData('0', 'foo_program');
     }
 
 
@@ -136,7 +136,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
      */
     public function testGetProgramDataReturnsAnArray()
     {
-        $this->createSut()->getProgramData(0);
+        $this->createSut()->getProgramData('0', 'foo_program');
     }
 
 
@@ -147,7 +147,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
      */
     public function testGetProgramDataContainsDocumentId()
     {
-        $this->createSut()->getProgramData(0);
+        $this->createSut()->getProgramData('0', 'foo_program');
     }
 
 
@@ -158,7 +158,7 @@ class MongoClientStrategyTest extends ClientStrategyTestCase
      */
     public function testGetProgramDataContainsKeyValueStoreData()
     {
-        $this->createSut()->getProgramData(0);
+        $this->createSut()->getProgramData('0', 'foo_program');
     }
 
 

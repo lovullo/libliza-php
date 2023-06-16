@@ -91,10 +91,10 @@ namespace Lovullo\Liza\Tests\Client
 
             $sut->expects($this->once())
             ->method('queryDocument')
-            ->with($url, $this->anything(), 'init')
+            ->with($url, $this->anything(), $this->anything(), 'init')
             ->willReturn($this->getDummyData());
 
-            $sut->getDocumentData(0);
+            $sut->getDocumentData('0', 'foo');
         }
 
 
@@ -105,24 +105,39 @@ namespace Lovullo\Liza\Tests\Client
 
             $sut->expects($this->once())
             ->method('queryDocument')
-            ->with($url, $this->anything(), 'progdata')
+            ->with($url, $this->anything(), $this->anything(), 'progdata')
             ->willReturn($this->getDummyData());
 
-            $sut->getProgramData(0);
+            $sut->getProgramData('0', 'foo');
         }
 
 
         public function testQueryMethodIsGivenProperDocId()
         {
             $sut = $this->createPlainSut('base');
-            $id  = 'FOOBAR';
+            $id = 'FOOBAR';
 
             $sut->expects($this->once())
             ->method('queryDocument')
-            ->with($this->anything(), $id, 'init')
+            ->with($this->anything(), $this->anything(), $id, 'init')
             ->willReturn($this->getDummyData());
 
-            $sut->getDocumentData($id);
+            $sut->getDocumentData($id, 'foo');
+        }
+
+
+        public function testQueryMethodIsGivenProperProgramId()
+        {
+            $sut        = $this->createPlainSut('base');
+            $id         = 'FOOBAR';
+            $program_id = 'foo';
+
+            $sut->expects($this->once())
+            ->method('queryDocument')
+            ->with($this->anything(), $program_id, $this->anything(), 'init')
+            ->willReturn($this->getDummyData());
+
+            $sut->getDocumentData('123', $program_id);
         }
 
 
@@ -144,7 +159,7 @@ namespace Lovullo\Liza\Tests\Client
 
             // make sure it doesn't just use the id we provided, rather than the
             // id in the response
-            $given = $sut->getDocumentData('nonsenseidfortesting');
+            $given = $sut->getDocumentData('nonsenseidfortesting', 'foo');
 
             $this->assertEquals($id, $given[ 'id' ]);
             $this->assertArrayNotHasKey('quoteId', $given);
@@ -164,7 +179,7 @@ namespace Lovullo\Liza\Tests\Client
             $sut->method('queryDocument')
             ->willReturn($dummy_data);
 
-            $given = $sut->getDocumentData(0);
+            $given = $sut->getDocumentData('0', 'foo_program');
         }
 
 
@@ -182,7 +197,7 @@ namespace Lovullo\Liza\Tests\Client
 
             $this->assertEquals(
                 $dummy_data,
-                $sut->getDocumentData(0)
+                $sut->getDocumentData('0', 'foo_program')
             );
         }
 
@@ -192,8 +207,9 @@ namespace Lovullo\Liza\Tests\Client
             global $file_get_contents_url,
             $file_get_contents_ret;
 
-            $url = 'https://foo/document/';
-            $id  = 'FOO123';
+            $url        = 'https://foo/document/';
+            $id         = 'FOO123';
+            $program_id = 'foo_program';
 
             // no mocking at all now
             $skey = 'testfookey123';
@@ -206,10 +222,10 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->getDocumentData($id);
+            $result = $sut->getDocumentData($id, $program_id);
 
             $this->assertEquals(
-                $url . $id . '/init?skey=' . $skey,
+                $url . $program_id . '/' . $id . '/init?skey=' . $skey,
                 $file_get_contents_url
             );
 
@@ -224,8 +240,9 @@ namespace Lovullo\Liza\Tests\Client
 
             $cookie = 'foo=bar';
 
-            $url = 'https://foo/document/';
-            $id  = 'FOO123';
+            $url        = 'https://foo/document/';
+            $id         = 'FOO123';
+            $program_id = 'foo_program';
 
             // no mocking at all now
             $skey = 'testfookey123';
@@ -238,10 +255,10 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->getDocumentData($id);
+            $result = $sut->getDocumentData($id, $program_id);
 
             $this->assertEquals(
-                $url . $id . '/init',
+                $url . $program_id. '/' . $id . '/init',
                 $file_get_contents_url
             );
 
@@ -254,8 +271,9 @@ namespace Lovullo\Liza\Tests\Client
             global $file_get_contents_url,
             $file_get_contents_ret;
 
-            $url = 'https://foo/document/';
-            $id  = 'FOO456';
+            $url        = 'https://foo/document/';
+            $id         = 'FOO456';
+            $program_id = 'foo_program';
 
             // no mocking at all now
             $skey = 'testkey456';
@@ -268,10 +286,10 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->getProgramData($id);
+            $result = $sut->getProgramData($id, $program_id);
 
             $this->assertEquals(
-                $url . $id . '/progdata?skey=' . $skey,
+                $url . $program_id . '/' . $id . '/progdata?skey=' . $skey,
                 $file_get_contents_url
             );
 
@@ -285,8 +303,9 @@ namespace Lovullo\Liza\Tests\Client
 
             $cookie = 'foo=bar';
 
-            $url = 'https://foo/document/';
-            $id  = 'FOO456';
+            $url        = 'https://foo/document/';
+            $id         = 'FOO456';
+            $program_id = 'foo_program';
 
             // no mocking at all now
             $skey = 'testkey456';
@@ -299,10 +318,10 @@ namespace Lovullo\Liza\Tests\Client
             $file_get_contents_ret = json_encode($dummy_data);
 
             // see mock file_get_contents at top of this file
-            $result = $sut->getProgramData($id);
+            $result = $sut->getProgramData($id, $program_id);
 
             $this->assertEquals(
-                $url . $id . '/progdata',
+                $url . $program_id . '/' . $id . '/progdata',
                 $file_get_contents_url
             );
 
